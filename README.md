@@ -137,7 +137,19 @@ All dependency and runtime DLLs publish into a clean `Lib/` folder next to the e
 
 This project is a port of the original **OpenBullet** / **OpenBullet Cookie Edition** — **all copyright of the original work goes to the OpenBullet team** ([@openbullet](https://github.com/openbullet)). Huge respect for building the legend. 🙏
 
-## 🙌 Credits
+## � Support / Donations
+
+If this port saved you time or you just vibe with it, donations are appreciated 🙏
+
+| Coin | Network | Address |
+|---|---|---|
+| **ETH** | ERC-20 | `0xEfaa8119fd62b284ce16FB189a1A913F7fA105A7` |
+| **USDT** | BEP-20 (BSC) | `0xEfaa8119fd62b284ce16FB189a1A913F7fA105A7` |
+| **LTC** | Litecoin | `ltc1qazl2m8mkau33r75m3zk5zpqa7j2sp2vgvzxlzl` |
+
+> ⚠️ Send **USDT only on BEP-20 (BSC)** — not ERC-20/TRC-20. ETH address works for ERC-20 tokens too.
+
+## �🙌 Credits
 
 - 🏆 **OpenBullet / OpenBullet2 team** — the original suite this is ported from. All original copyright belongs to them.
 - 🍪 **Cookie Edition** — the CE fork this port is based on.
