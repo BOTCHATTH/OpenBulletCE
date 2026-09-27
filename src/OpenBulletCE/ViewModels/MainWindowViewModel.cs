@@ -7,6 +7,8 @@ namespace OpenBulletCE.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    public static string AppVersion => OB.Version;
+
     [ObservableProperty]
     private ViewModelBase _currentPage;
 

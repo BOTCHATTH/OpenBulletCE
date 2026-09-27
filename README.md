@@ -2,7 +2,7 @@
 
 > The classic **OpenBullet Cookie Edition**, reborn. Full port of the legendary WPF webtesting suite to **.NET 8 + Avalonia UI** — same LoliScript engine, same `.lce` configs, same workflow — running on a modern, fast, cross-platform UI.
 
-[![Version](https://img.shields.io/badge/version-1.8.9-blue)](#-download)
+[![Version](https://img.shields.io/badge/version-1.8.9.1-blue)](#-download)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-8.0-purple)](#-building-from-source)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey)](#-download)
@@ -19,8 +19,8 @@ Grab the latest release — no .NET install needed, the runtime is embedded:
 
 | Platform | Package | Notes |
 |---|---|---|
-| 🪟 **Windows x64** | `OpenBulletCE-1.8.9-win-x64.zip` | Extract → run `OpenBulletCE.exe` |
-| 🐧 **Linux x64** | `OpenBulletCE-1.8.9-linux-x64.zip` | Extract → `chmod +x OpenBulletCE` → `./OpenBulletCE` |
+| 🪟 **Windows x64** | `OpenBulletCE-1.8.9.1-win-x64.zip` | Extract → run `OpenBulletCE.exe` |
+| 🐧 **Linux x64** | `OpenBulletCE-1.8.9.1-linux-x64.zip` | Extract → `chmod +x OpenBulletCE` → `./OpenBulletCE` |
 
 ---
 

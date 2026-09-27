@@ -39,6 +39,34 @@ public partial class StackerView : UserControl
             };
         DataContextChanged += OnDataContextChanged;
         DetachedFromVisualTree += OnDetached;
+        HtmlView.WebViewCreated += (_, _) =>
+        {
+            _htmlViewReady = true;
+            RenderHtml();
+            try
+            {
+                // Debug view = static snapshot: cancel any in-page navigation to a
+                // real URL (form submits, link clicks, JS redirects)
+                if (((WebViewCore.IVirtualWebView)HtmlView).PlatformView is WebViewCore.IWebViewEventHandler eh)
+                    eh.NavigationStarting += (_, a) =>
+                    {
+                        if (a is WebViewCore.Events.WebViewUrlLoadingEventArg arg &&
+                            arg.Url is { Scheme: "http" or "https" })
+                            arg.Cancel = true;
+                    };
+            }
+            catch { }
+        };
+        // And never let links/popups spawn new windows or leave the view
+        HtmlView.WebViewNewWindowRequested += (_, a) =>
+            a.UrlLoadingStrategy = WebViewCore.Enums.UrlRequestStrategy.CancelLoad;
+        // The platform webview is disposed/recreated on every tab switch —
+        // re-push content shortly after re-attach in case init raced
+        HtmlView.AttachedToVisualTree += async (_, _) =>
+        {
+            await Task.Delay(800);
+            RenderHtml();
+        };
     }
 
     // Persist the in-memory stack/script back into the config when leaving the view,
@@ -418,7 +446,81 @@ public partial class StackerView : UserControl
                 v.IsCapture ? RuriLib.Models.Colors.Tomato : RuriLib.Models.Colors.Gold));
         DataOutput.ItemsSource = entries;
 
+        _lastHtml = data.ResponseSource ?? "";
+        if (HtmlSource != null)
+            HtmlSource.Text = string.IsNullOrEmpty(_lastHtml)
+                ? "(no response source yet — run a REQUEST block)"
+                : _lastHtml;
+        RenderHtml();
+
         ApplyLogFilter();
+    }
+
+    private string _lastHtml = "";
+    private bool _htmlViewReady;
+
+    private void RenderHtml()
+    {
+        if (HtmlView == null) return;
+        try
+        {
+            var html = string.IsNullOrEmpty(_lastHtml)
+                ? "<html><body style='background:#14161d;color:#888;font-family:sans-serif;padding:16px'>(no response source yet — run a REQUEST block)</body></html>"
+                : _lastHtml;
+            // Keep it a snapshot: swallow form submits + link clicks inside the page
+            const string freezeJs = "<script>document.addEventListener('submit',function(e){e.preventDefault()},true);document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a'):null;if(a)e.preventDefault()},true);</script>";
+            if (html.Contains("</body>", StringComparison.OrdinalIgnoreCase))
+                html = System.Text.RegularExpressions.Regex.Replace(html, "</body>", freezeJs + "</body>",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            else
+                html += freezeJs;
+            // Avalonia dedupes identical StyledProperty values, so force a change
+            // to guarantee the NavigateToString call fires every run
+            if (HtmlView.HtmlContent == html)
+                HtmlView.HtmlContent = "\u200b"; // zero-width space sentinel
+            HtmlView.HtmlContent = html;
+        }
+        catch { }
+    }
+
+    private void HtmlSourceToggle_Click(object? sender, RoutedEventArgs e)
+    {
+        var showingSource = HtmlSource?.IsVisible == true;
+        if (HtmlSource != null) HtmlSource.IsVisible = !showingSource;
+        if (HtmlView != null) HtmlView.IsVisible = showingSource;
+        if (HtmlSourceToggle != null) HtmlSourceToggle.Content = showingSource ? "Source" : "Rendered";
+    }
+
+    private async void CopyHtml_Click(object? sender, RoutedEventArgs e)
+    {
+        var text = _lastHtml;
+        if (!string.IsNullOrEmpty(text))
+            await (TopLevel.GetTopLevel(this)?.Clipboard?.SetTextAsync(text) ?? Task.CompletedTask);
+    }
+
+    private void OpenHtml_Click(object? sender, RoutedEventArgs e)
+    {
+        var html = _vm?.BotData?.ResponseSource;
+        if (string.IsNullOrEmpty(html)) return;
+        try
+        {
+            var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "obce-response.html");
+            System.IO.File.WriteAllText(path, html);
+            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            OB.Logger.LogError(Components.Stacker, $"Could not open HTML: {ex.Message}");
+        }
+    }
+
+    private void DbgTab_Checked(object? sender, RoutedEventArgs e)
+    {
+        if (DataOutput == null || LogPanel == null || HtmlPanel == null) return;
+        DataOutput.IsVisible = sender == DbgTabData;
+        LogPanel.IsVisible = sender == DbgTabLog;
+        HtmlPanel.IsVisible = sender == DbgTabHtml;
+        if (sender == DbgTabHtml) RenderHtml();
     }
 
     private void LogSearch_TextChanged(object? sender, Avalonia.Controls.TextChangedEventArgs e)

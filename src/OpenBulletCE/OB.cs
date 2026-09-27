@@ -25,7 +25,7 @@ public static class OB
         Alerter = Alerter
     };
 
-    public static string Version => "1.8.9";
+    public static string Version => "1.8.9.1";
 
     // Block Mappings (including Plugins): BlockType -> PageType -> BlockColor
     public static List<(Type, Type, Color)> BlockMappings = new List<(Type, Type, Color)>();

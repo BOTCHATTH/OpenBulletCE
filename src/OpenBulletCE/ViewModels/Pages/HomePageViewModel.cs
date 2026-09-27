@@ -6,6 +6,8 @@ public partial class HomePageViewModel : ViewModelBase
 {
     public string Welcome => "Welcome to OpenBullet Cookie Edition";
 
+    public string Version => $"v{OB.Version}";
+
     public int ConfigsCount => OB.ConfigManager?.Configs.Count() ?? 0;
     public int WordlistsCount => OB.WordlistManager?.Wordlists.Count() ?? 0;
     public int ProxiesCount => OB.ProxyManager?.Proxies.Count() ?? 0;

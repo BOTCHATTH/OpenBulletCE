@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.WebView.Desktop;
 using System;
 
 namespace OpenBulletCE;
@@ -13,5 +14,6 @@ class Program
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace();
+            .LogToTrace()
+            .UseDesktopWebView();
 }

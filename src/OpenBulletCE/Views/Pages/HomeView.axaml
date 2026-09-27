@@ -19,9 +19,14 @@
                 <Span>Welcome to </Span>
                 <Span FontWeight="Bold">OpenBullet Cookie Edition</Span>
             </TextBlock>
+            <TextBlock FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource BrushAccent}"
+                       HorizontalAlignment="Center"
+                       Text="{Binding Version}" />
             <TextBlock FontSize="13" Foreground="{StaticResource BrushTextMuted}"
                        HorizontalAlignment="Center"
                        Text="Avalonia port of the original Cookie Edition" />
+            <Button Content="Show changelog" Click="ShowChangelog_Click"
+                    HorizontalAlignment="Center" Margin="0,8,0,0" Padding="14,5" />
         </StackPanel>
 
         <!-- Quick stats -->

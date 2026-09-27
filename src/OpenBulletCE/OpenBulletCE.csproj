@@ -7,10 +7,11 @@
     <RootNamespace>OpenBulletCE</RootNamespace>
     <AssemblyName>OpenBulletCE</AssemblyName>
     <ApplicationIcon>Assets\OBlogoIcon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
     <LangVersion>latest</LangVersion>
-    <Version>1.8.9</Version>
-    <AssemblyVersion>1.8.9</AssemblyVersion>
-    <FileVersion>1.8.9.0</FileVersion>
+    <Version>1.8.9.1</Version>
+    <AssemblyVersion>1.8.9.1</AssemblyVersion>
+    <FileVersion>1.8.9.1</FileVersion>
     <!-- NetBeauty: move dependency dlls into Lib\ at publish (OB2-style clean root) -->
     <BeautyLibsDir>Lib</BeautyLibsDir>
     <BeautySharedRuntimeMode>False</BeautySharedRuntimeMode>
@@ -37,6 +38,10 @@
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.5" />
     <PackageReference Include="ModelContextProtocol.AspNetCore" Version="1.3.0" />
     <PackageReference Include="nulastudio.NetBeauty" Version="2.1.5" />
+    <PackageReference Include="WebView.Avalonia" Version="11.0.0.1" />
+    <PackageReference Include="WebView.Avalonia.Desktop" Version="11.0.0.1" />
+    <PackageReference Include="WebView.Avalonia.Linux" Version="11.0.0.1" />
+    <PackageReference Include="WebView.Avalonia.Windows" Version="11.0.0.1" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

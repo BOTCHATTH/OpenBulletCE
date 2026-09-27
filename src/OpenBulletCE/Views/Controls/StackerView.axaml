@@ -5,8 +5,39 @@
              xmlns:controls="clr-namespace:OpenBulletCE.Views.Controls"
              xmlns:ob="clr-namespace:OpenBulletCE"
              xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+             xmlns:wv="clr-namespace:AvaloniaWebView;assembly=Avalonia.WebView"
              mc:Ignorable="d"
              x:Class="OpenBulletCE.Views.Controls.StackerView">
+
+    <UserControl.Styles>
+        <Style Selector="RadioButton.DbgTab">
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSM}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderThickness="0,0,0,2"
+                            BorderBrush="Transparent"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="RadioButton.DbgTab:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        </Style>
+        <Style Selector="RadioButton.DbgTab:checked /template/ Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}" />
+        </Style>
+        <Style Selector="RadioButton.DbgTab:checked">
+            <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+        </Style>
+    </UserControl.Styles>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -207,8 +238,22 @@
                     </TextBox>
                 </DockPanel>
 
-                <TabControl Grid.Row="3">
-                    <TabItem Header="Data">
+                <Grid Grid.Row="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="DbgTabData" GroupName="DbgTabs" Classes="DbgTab"
+                                         Content="Data" IsChecked="True" Checked="DbgTab_Checked" />
+                            <RadioButton x:Name="DbgTabLog" GroupName="DbgTabs" Classes="DbgTab"
+                                         Content="Log" Checked="DbgTab_Checked" />
+                            <RadioButton x:Name="DbgTabHtml" GroupName="DbgTabs" Classes="DbgTab"
+                                         Content="HTML" Checked="DbgTab_Checked" />
+                        </StackPanel>
+                    </Border>
+                    <Panel Grid.Row="1">
                         <ListBox x:Name="DataOutput" FontFamily="{StaticResource FontMono}"
                                  FontSize="{StaticResource FontSizeXS}"
                                  Background="{StaticResource BrushSurfaceAlt}" BorderThickness="0"
@@ -226,9 +271,7 @@
                                 </ContextMenu>
                             </ListBox.ContextMenu>
                         </ListBox>
-                    </TabItem>
-                    <TabItem Header="Log">
-                        <DockPanel>
+                        <DockPanel x:Name="LogPanel" IsVisible="False">
                             <TextBox DockPanel.Dock="Top" x:Name="LogSearch" Margin="4"
                                      Watermark="Search log..." BorderThickness="1" MinHeight="26"
                                      TextChanged="LogSearch_TextChanged" />
@@ -250,8 +293,23 @@
                             </ListBox.ContextMenu>
                             </ListBox>
                         </DockPanel>
-                    </TabItem>
-                </TabControl>
+                        <DockPanel x:Name="HtmlPanel" IsVisible="False">
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="4" Spacing="4">
+                                <Button Content="Copy" Click="CopyHtml_Click" Padding="8,2" />
+                                <Button Content="Open in Browser" Click="OpenHtml_Click" Padding="8,2" />
+                                <Button x:Name="HtmlSourceToggle" Content="Source" Click="HtmlSourceToggle_Click" Padding="8,2" />
+                            </StackPanel>
+                            <Panel>
+                                <wv:WebView x:Name="HtmlView" />
+                                <TextBox x:Name="HtmlSource" IsReadOnly="True" AcceptsReturn="True" IsVisible="False"
+                                         FontFamily="{StaticResource FontMono}" FontSize="{StaticResource FontSizeXS}"
+                                         Background="{StaticResource BrushSurfaceAlt}" BorderThickness="0"
+                                         Padding="6" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                            </Panel>
+                        </DockPanel>
+                    </Panel>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

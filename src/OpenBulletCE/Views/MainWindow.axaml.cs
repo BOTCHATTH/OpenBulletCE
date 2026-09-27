@@ -11,6 +11,12 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        TitleText.Text = $"Open Bullet - {OB.Version}";
+        Opened += async (_, _) =>
+        {
+            await System.Threading.Tasks.Task.Delay(1500);
+            await Services.UpdateChecker.CheckAsync(this);
+        };
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
