@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenBulletCE.ViewModels.Pages"
+             mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Pages.HomeView"
+             x:DataType="vm:HomePageViewModel">
+
+    <Design.DataContext>
+        <vm:HomePageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*,Auto,Auto,*">
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" Spacing="4">
+            <TextBlock FontSize="24" TextWrapping="Wrap" TextAlignment="Center"
+                       Foreground="{StaticResource BrushTextPrimary}"
+                       HorizontalAlignment="Center">
+                <Span>Welcome to </Span>
+                <Span FontWeight="Bold">OpenBullet Cookie Edition</Span>
+            </TextBlock>
+            <TextBlock FontSize="13" Foreground="{StaticResource BrushTextMuted}"
+                       HorizontalAlignment="Center"
+                       Text="Avalonia port of the original Cookie Edition" />
+        </StackPanel>
+
+        <!-- Quick stats -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center"
+                    Spacing="10" Margin="0,24,0,0">
+            <Border Classes="Card" Padding="24,14" MinWidth="110">
+                <StackPanel>
+                    <TextBlock Text="{Binding ConfigsCount}" FontSize="22" FontWeight="Bold"
+                               Foreground="{StaticResource BrushAccent}" HorizontalAlignment="Center" />
+                    <TextBlock Text="Configs" Foreground="{StaticResource BrushTextMuted}"
+                               HorizontalAlignment="Center" FontSize="11" />
+                </StackPanel>
+            </Border>
+            <Border Classes="Card" Padding="24,14" MinWidth="110">
+                <StackPanel>
+                    <TextBlock Text="{Binding WordlistsCount}" FontSize="22" FontWeight="Bold"
+                               Foreground="{StaticResource BrushGood}" HorizontalAlignment="Center" />
+                    <TextBlock Text="Wordlists" Foreground="{StaticResource BrushTextMuted}"
+                               HorizontalAlignment="Center" FontSize="11" />
+                </StackPanel>
+            </Border>
+            <Border Classes="Card" Padding="24,14" MinWidth="110">
+                <StackPanel>
+                    <TextBlock Text="{Binding ProxiesCount}" FontSize="22" FontWeight="Bold"
+                               Foreground="{StaticResource BrushCustom}" HorizontalAlignment="Center" />
+                    <TextBlock Text="Proxies" Foreground="{StaticResource BrushTextMuted}"
+                               HorizontalAlignment="Center" FontSize="11" />
+                </StackPanel>
+            </Border>
+            <Border Classes="Card" Padding="24,14" MinWidth="110">
+                <StackPanel>
+                    <TextBlock Text="{Binding CookiesCount}" FontSize="22" FontWeight="Bold"
+                               Foreground="{StaticResource BrushWarning}" HorizontalAlignment="Center" />
+                    <TextBlock Text="Cookies" Foreground="{StaticResource BrushTextMuted}"
+                               HorizontalAlignment="Center" FontSize="11" />
+                </StackPanel>
+            </Border>
+            <Border Classes="Card" Padding="24,14" MinWidth="110">
+                <StackPanel>
+                    <TextBlock Text="{Binding HitsCount}" FontSize="22" FontWeight="Bold"
+                               Foreground="{StaticResource BrushToCheck}" HorizontalAlignment="Center" />
+                    <TextBlock Text="Hits" Foreground="{StaticResource BrushTextMuted}"
+                               HorizontalAlignment="Center" FontSize="11" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,193 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenBulletCE.ViewModels.Pages"
+             xmlns:plugins="clr-namespace:OpenBulletCE.Plugins"
+             xmlns:pf="clr-namespace:PluginFramework;assembly=PluginFramework"
+             xmlns:ob="clr-namespace:OpenBulletCE" mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Pages.PluginsView"
+             x:DataType="vm:PluginsPageViewModel">
+
+    <Design.DataContext>
+        <vm:PluginsPageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <!-- Warning -->
+        <TextBlock Grid.Row="0" Margin="0,0,0,8">
+            <Span Foreground="{StaticResource BrushCustom}">Remember that some plugins might contain </Span>
+            <Span Foreground="{StaticResource BrushError}" FontWeight="Bold">MALICIOUS CODE</Span>
+            <Span Foreground="{StaticResource BrushCustom}"> that runs even without clicking any buttons! </Span>
+            <Span Foreground="{StaticResource BrushCustom}" FontWeight="Bold" TextDecorations="Underline">Only load plugins you can trust!</Span>
+        </TextBlock>
+
+        <!-- Toolbar -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="6" Margin="0,0,0,6">
+            <Button Classes="Accent" Click="AddPlugin_Click" Padding="14,6">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <PathIcon Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Width="12" Height="12" />
+                    <TextBlock Text="Add Plugin" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Content="Rescan" Command="{Binding ReloadPluginsCommand}" Padding="14,6" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="2">
+            <StackPanel Spacing="8">
+                <!-- Plugin cards -->
+                <ItemsControl ItemsSource="{Binding Plugins}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="plugins:PluginDescriptor">
+                            <Border Classes="Card" Padding="10,6" Margin="0,2"
+                                    PointerPressed="PluginCard_PointerPressed" Tag="{Binding}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center"
+                                               FontWeight="SemiBold" Foreground="{StaticResource BrushTextPrimary}" />
+                                    <Button Grid.Column="1" Click="RemovePlugin_Click" Tag="{Binding}"
+                                            Padding="12,4" Classes="Danger">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <TextBlock Text="×" FontWeight="Bold" VerticalAlignment="Center" />
+                                            <TextBlock Text="Remove" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="No plugins loaded. Click 'Add Plugin' to load a .dll into the Plugins folder."
+                           Foreground="{StaticResource BrushTextMuted}" Margin="4"
+                           IsVisible="{Binding !Plugins.Count}" />
+
+                <!-- Selected plugin detail -->
+                <ContentControl Content="{Binding SelectedPlugin}">
+                    <ContentControl.DataTemplates>
+                        <DataTemplate DataType="plugins:PluginDescriptor">
+                            <Border Classes="Card" Margin="0,4,0,0">
+                                <StackPanel Spacing="12">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="{Binding Name}" FontSize="{StaticResource FontSizeLG}"
+                                                   FontWeight="SemiBold" Foreground="{StaticResource BrushTextPrimary}" />
+                                        <Border Background="{StaticResource BrushAccentMuted}" CornerRadius="10"
+                                                Padding="8,2" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding AssemblyName}"
+                                                       FontSize="{StaticResource FontSizeXS}"
+                                                       Foreground="{StaticResource BrushAccent}" />
+                                        </Border>
+                                    </StackPanel>
+
+                                    <ItemsControl ItemsSource="{Binding Properties}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="plugins:PluginPropertyDescriptor">
+                                                <Grid Margin="0,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="160" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="{Binding Label}"
+                                                               Foreground="{StaticResource BrushTextSecondary}"
+                                                               VerticalAlignment="Center"
+                                                               ToolTip.Tip="{Binding Tooltip}" />
+
+                                                    <TextBox Grid.Column="1" Text="{Binding Value}"
+                                                             Watermark="{Binding Tooltip}"
+                                                             IsVisible="{Binding InputType, Converter={StaticResource InputTypeConverter}, ConverterParameter=Text}"
+                                                             IsReadOnly="{Binding ReadOnly}" />
+
+                                                    <TextBox Grid.Column="1" Text="{Binding Value}"
+                                                             AcceptsReturn="True" MinHeight="60" MaxHeight="200"
+                                                             IsVisible="{Binding InputType, Converter={StaticResource InputTypeConverter}, ConverterParameter=TextMulti}"
+                                                             IsReadOnly="{Binding ReadOnly}" />
+
+                                                    <NumericUpDown Grid.Column="1"
+                                                                   Value="{Binding Value, Converter={StaticResource IntConverter}}"
+                                                                   Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}"
+                                                                   Increment="1"
+                                                                   IsVisible="{Binding InputType, Converter={StaticResource InputTypeConverter}, ConverterParameter=Numeric}" />
+
+                                                    <CheckBox Grid.Column="1" IsChecked="{Binding Value, Converter={StaticResource BoolConverter}}"
+                                                              VerticalAlignment="Center"
+                                                              IsVisible="{Binding InputType, Converter={StaticResource InputTypeConverter}, ConverterParameter=Checkbox}" />
+
+                                                    <ComboBox Grid.Column="1"
+                                                              SelectedItem="{Binding Value}"
+                                                              ItemsSource="{Binding Options}"
+                                                              IsVisible="{Binding InputType, Converter={StaticResource InputTypeConverter}, ConverterParameter=Dropdown}" />
+
+                                                    <TextBlock Grid.Column="1" Text="{Binding Value}"
+                                                               TextWrapping="Wrap"
+                                                               Foreground="{StaticResource BrushTextMuted}"
+                                                               IsVisible="{Binding InputType, Converter={StaticResource InputTypeConverter}, ConverterParameter=InfoText}" />
+
+                                                    <Grid Grid.Column="1"
+                                                          IsVisible="{Binding InputType, Converter={StaticResource InputTypeConverter}, ConverterParameter=FilePicker}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBox Grid.Column="0" Text="{Binding Value}" IsReadOnly="True" />
+                                                        <Button Grid.Column="1" Content="..." Padding="8,4" Margin="4,0,0,0"
+                                                                Click="FilePicker_Click" Tag="{Binding}" />
+                                                    </Grid>
+
+                                                    <ComboBox Grid.Column="1"
+                                                              SelectedItem="{Binding Value}"
+                                                              ItemsSource="{Binding $parent[UserControl].DataContext.Wordlists}"
+                                                              IsVisible="{Binding InputType, Converter={StaticResource InputTypeConverter}, ConverterParameter=WordlistPicker}" />
+
+                                                    <ComboBox Grid.Column="1"
+                                                              SelectedItem="{Binding Value}"
+                                                              ItemsSource="{Binding $parent[UserControl].DataContext.Configs}"
+                                                              IsVisible="{Binding InputType, Converter={StaticResource InputTypeConverter}, ConverterParameter=ConfigPicker}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <ItemsControl ItemsSource="{Binding Methods}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="plugins:PluginMethodDescriptor">
+                                                <Button Classes="Accent" Margin="0,4" Padding="16,6"
+                                                        Content="{Binding ButtonText}"
+                                                        Click="PluginMethod_Click" Tag="{Binding}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ContentControl.DataTemplates>
+                </ContentControl>
+
+                <!-- Block plugins -->
+                <StackPanel Spacing="6" Margin="0,16,0,0"
+                            IsVisible="{Binding BlockPlugins.Count}">
+                    <TextBlock Text="BLOCK PLUGINS" FontWeight="SemiBold"
+                               Foreground="{StaticResource BrushAccent}" FontSize="12" />
+                    <ItemsControl ItemsSource="{Binding BlockPlugins}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="pf:IBlockPlugin">
+                                <Border Classes="Card" Padding="10,6" Margin="0,2">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Border Width="14" Height="14" VerticalAlignment="Center"
+                                                Background="{Binding Color}"
+                                                CornerRadius="2" BorderThickness="1"
+                                                BorderBrush="{StaticResource BrushTextMuted}" />
+                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource BrushTextPrimary}" />
+                                        <TextBlock Text="Block available in the Stacker (Add Block → Plugins)"
+                                                   VerticalAlignment="Center" FontSize="11"
+                                                   Foreground="{StaticResource BrushTextMuted}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

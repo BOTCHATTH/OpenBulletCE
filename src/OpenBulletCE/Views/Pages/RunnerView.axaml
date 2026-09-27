@@ -1,0 +1,543 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenBulletCE.ViewModels.Pages"
+             xmlns:vmgr="clr-namespace:OpenBulletCE.ViewModels"
+             xmlns:runner="clr-namespace:RuriLib.Runner;assembly=RuriLib"
+             xmlns:conv="clr-namespace:Avalonia.Data.Converters;assembly=Avalonia.Base"
+             xmlns:ob="clr-namespace:OpenBulletCE"
+             mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Pages.RunnerView"
+             x:DataType="vm:RunnerPageViewModel">
+
+    <Design.DataContext>
+        <vm:RunnerPageViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <!-- ═══ MANAGER LIST — shown when no runner is selected ═══ -->
+        <Grid IsVisible="{Binding ShowManager}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Toolbar -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Command="{Binding AddRunnerCommand}" Padding="8,4" Margin="0,0,4,0">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <PathIcon Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Width="14" Height="14" Foreground="{StaticResource BrushSuccess}" />
+                        <TextBlock Text="New" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding StartAllCommand}" Padding="8,4" Margin="0,0,4,0">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <PathIcon Data="M8,5.14V19.14L19,12.14L8,5.14Z" Width="14" Height="14" Foreground="{StaticResource BrushSuccess}" />
+                        <TextBlock Text="Start All" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding StopAllCommand}" Padding="8,4" Margin="0,0,4,0">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="14" Height="14" Foreground="{StaticResource BrushError}" />
+                        <TextBlock Text="Stop All" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding RemoveAllRunnersCommand}" Padding="8,4" Margin="0,0,4,0">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="14" Height="14" Foreground="{StaticResource BrushError}" />
+                        <TextBlock Text="Remove All" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="TIP: Click on a Runner to switch to the detailed view"
+                           Foreground="{StaticResource BrushTextTertiary}" VerticalAlignment="Center" Margin="12,0,0,0" />
+            </StackPanel>
+
+            <!-- Runner list — compact 2-row items, click to open detail -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Runners}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" Margin="0,4" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vmgr:RunnerInstance">
+                            <Border Classes="ItemCard" Margin="0,0,0,4"
+                                    PointerPressed="RunnerItem_PointerPressed" Tag="{Binding}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Row 1: Config / Wordlist / Bots / Proxies / STATUS -->
+                                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="6,4">
+                                        <TextBlock Text="Config: " FontWeight="Bold" />
+                                        <TextBlock Text="{Binding ViewModel.ConfigName}" Margin="0,0,10,0" />
+                                        <TextBlock Text="Wordlist: " FontWeight="Bold" />
+                                        <TextBlock Text="{Binding ViewModel.WordlistName}" Margin="0,0,10,0" />
+                                        <TextBlock Text="Bots: " FontWeight="Bold" />
+                                        <TextBlock Text="{Binding ViewModel.BotsAmount}" Margin="0,0,10,0" />
+                                        <TextBlock Text="Proxies: " FontWeight="Bold" />
+                                        <TextBlock Text="{Binding ViewModel.ProxyMode}" Margin="0,0,10,0" />
+                                        <TextBlock Text="STATUS: " FontWeight="Bold" Foreground="{StaticResource BrushWarning}" />
+                                        <TextBlock Text="{Binding ViewModel.WorkerStatus}" Foreground="{StaticResource BrushWarning}" />
+                                    </StackPanel>
+
+                                    <!-- Row 2: stats -->
+                                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="6,0,6,4">
+                                        <TextBlock Text="Hits: " FontWeight="Bold" Foreground="{StaticResource BrushSuccess}" />
+                                        <TextBlock Text="{Binding ViewModel.HitCount}" Foreground="{StaticResource BrushSuccess}" Margin="0,0,10,0" />
+                                        <TextBlock Text="Custom: " FontWeight="Bold" Foreground="{StaticResource BrushCustom}" />
+                                        <TextBlock Text="{Binding ViewModel.CustomCount}" Foreground="{StaticResource BrushCustom}" Margin="0,0,10,0" />
+                                        <TextBlock Text="ToCheck: " FontWeight="Bold" Foreground="{StaticResource BrushInfo}" />
+                                        <TextBlock Text="{Binding ViewModel.ToCheckCount}" Foreground="{StaticResource BrushInfo}" Margin="0,0,10,0" />
+                                        <TextBlock Text="Progress: " FontWeight="Bold" />
+                                        <TextBlock Text="{Binding ViewModel.ProgressCount}" />
+                                        <TextBlock Text="/" />
+                                        <TextBlock Text="{Binding ViewModel.ListSize}" />
+                                        <TextBlock Text=" (" />
+                                        <TextBlock Text="{Binding ViewModel.Progress, StringFormat='{}{0:F1}'}" />
+                                        <TextBlock Text="%)" Margin="0,0,10,0" />
+                                        <TextBlock Text="CPM: " FontWeight="Bold" />
+                                        <TextBlock Text="{Binding ViewModel.CPM}" />
+                                    </StackPanel>
+
+                                    <!-- Buttons -->
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="4">
+                                        <Button Command="{Binding StartCommand}" Padding="8,2" Margin="0,0,4,0">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <PathIcon Data="M8,5.14V19.14L19,12.14L8,5.14Z" Width="12" Height="12" />
+                                                <TextBlock Text="Start" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Command="{Binding StopCommand}" Padding="8,2" Margin="0,0,4,0">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="12" Height="12" />
+                                                <TextBlock Text="Stop" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Command="{Binding $parent[ItemsControl].DataContext.CloneRunnerCommand}"
+                                                CommandParameter="{Binding}" Padding="8,2" Margin="0,0,4,0"
+                                                ToolTip.Tip="Clone this runner (config, list, bots, proxy mode)">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <PathIcon Data="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" Width="12" Height="12" />
+                                                <TextBlock Text="Clone" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Command="{Binding $parent[ItemsControl].DataContext.RemoveRunnerCommand}"
+                                                CommandParameter="{Binding}" Padding="8,2">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="12" Height="12" />
+                                                <TextBlock Text="Remove" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- ═══ DETAIL VIEW — OB2 job layout: header + [bots | hits] + [log | stats] ═══ -->
+        <Grid IsVisible="{Binding $parent[UserControl].DataContext.ShowDetail}"
+              DataContext="{Binding SelectedRunner}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- TOP — config card + job details + controls -->
+            <Grid Grid.Row="0" DataContext="{Binding ViewModel}" Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="390" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Config card: image + identity + data/proxy details -->
+                <Border Grid.Column="0" Classes="Card" Padding="10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="56" Height="56" CornerRadius="8" Margin="0,0,10,0"
+                                VerticalAlignment="Top" Background="{StaticResource BrushSurfaceAlt}" ClipToBounds="True">
+                            <Image Source="{Binding ConfigImageBase64, Converter={x:Static ob:Base64ToBitmapConverter.Instance}}"
+                                   Stretch="UniformToFill" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="3">
+                            <TextBlock Text="{Binding ConfigName, TargetNullValue='(no config)'}"
+                                       FontWeight="Bold" FontSize="{StaticResource FontSizeMD}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{Binding ConfigAuthor}"
+                                       Foreground="{StaticResource BrushTextSecondary}" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Data pool: " Foreground="{StaticResource BrushInfo}" />
+                                <TextBlock Text="{Binding WordlistName}" TextTrimming="CharacterEllipsis"
+                                           MaxWidth="170" ToolTip.Tip="{Binding WordlistName}" />
+                                <TextBlock Text="{Binding CookieName}" Foreground="{StaticResource BrushInfo}"
+                                           TextTrimming="CharacterEllipsis" MaxWidth="170"
+                                           ToolTip.Tip="{Binding CookieName}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Proxies: " Foreground="{StaticResource BrushInfo}" />
+                                <TextBlock Text="{Binding TotalProxiesCount}" />
+                                <TextBlock Text=" loaded" Foreground="{StaticResource BrushTextSecondary}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,5,0,0">
+                                <Button Content="Select Config" IsEnabled="{Binding ControlsEnabled}"
+                                        Click="SelectConfig_Click" Padding="8,3" />
+                                <Button Content="Select List" IsEnabled="{Binding ControlsEnabled}"
+                                        Click="SelectList_Click" Padding="8,3" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Right: bots/skip/proxy mode + progress + START/OPTIONS -->
+                <Grid Grid.Column="1" Margin="10,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <WrapPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Bots:" VerticalAlignment="Center" Margin="0,0,4,0" />
+                        <NumericUpDown Minimum="1" Maximum="200" Width="96" Margin="0,2,10,2"
+                                       Value="{Binding BotsAmount, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" IsEnabled="{Binding ControlsEnabled}" />
+                        <TextBlock Text="Skip:" VerticalAlignment="Center" Margin="0,0,4,0" />
+                        <NumericUpDown Minimum="1" Maximum="{Binding ListSize}" Width="110" Margin="0,2,10,2"
+                                       Value="{Binding StartingPoint, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" IsEnabled="{Binding ControlsEnabled}" />
+                        <TextBlock Text="Proxy:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <RadioButton x:Name="ProxyDefRadio" GroupName="proxyRadio" Content="DEF" Margin="0,0,6,0"
+                                     IsEnabled="{Binding ControlsEnabled}"
+                                     Checked="ProxyRadio_Checked" Tag="Default" />
+                        <RadioButton x:Name="ProxyOnRadio" GroupName="proxyRadio" Content="ON" Margin="0,0,6,0"
+                                     IsEnabled="{Binding ControlsEnabled}"
+                                     Checked="ProxyRadio_Checked" Tag="On" />
+                        <RadioButton x:Name="ProxyOffRadio" GroupName="proxyRadio" Content="OFF"
+                                     IsEnabled="{Binding ControlsEnabled}"
+                                     Checked="ProxyRadio_Checked" Tag="Off" />
+                    </WrapPanel>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="6" Margin="0,4,0,0">
+                            <ProgressBar Value="{Binding Progress, Mode=OneWay}" Maximum="100" Height="8" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding ProgressCount}" />
+                                <TextBlock Text=" / " />
+                                <TextBlock Text="{Binding ListSize}" />
+                                <TextBlock Text=" (" />
+                                <TextBlock Text="{Binding Progress, StringFormat='{}{0:F2}'}" />
+                                <TextBlock Text="%)" />
+                                <TextBlock Text="   elapsed " Foreground="{StaticResource BrushTextSecondary}" />
+                                <TextBlock Text="{Binding TimerDays}" /><TextBlock Text="d  " />
+                                <TextBlock Text="{Binding TimerHours}" /><TextBlock Text=":" />
+                                <TextBlock Text="{Binding TimerMinutes}" /><TextBlock Text=":" />
+                                <TextBlock Text="{Binding TimerSeconds}" />
+                                <TextBlock Text="{Binding TimeLeft, StringFormat='   remaining {0}'}"
+                                           Foreground="{StaticResource BrushTextSecondary}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+                            <Button Content="OPTIONS" Padding="12,6" Click="JobOptions_Click"
+                                    IsEnabled="{Binding ControlsEnabled}" />
+                            <Button x:Name="StartStopButton" Padding="20,10" FontWeight="Bold" Classes="Success"
+                                    Click="StartRunner_Click"
+                                    Content="{Binding WorkerStatus, Converter={x:Static ob:StartStopTextConverter.Instance}}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <!-- OTHER GRID — original: [bots | hits] top + [select/log | stats] bottom -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MinWidth="260" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="300" MinWidth="220" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="140" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="150" MinHeight="80" />
+                </Grid.RowDefinitions>
+
+                <!-- Vertical splitter -->
+                <GridSplitter Grid.Column="1" Grid.Row="0" ResizeDirection="Columns"
+                              ResizeBehavior="PreviousAndNext" Width="8"
+                              Background="{StaticResource BrushBorder}" ZIndex="10" />
+
+                <!-- Right: hits/custom/tocheck list + filters + timer -->
+                <Grid Grid.Column="2" Grid.Row="0" DataContext="{Binding ViewModel}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+
+                    <DataGrid Grid.Row="0" ItemsSource="{Binding FilteredResults}"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              SelectionMode="Extended" x:Name="HitsGrid"
+                              CanUserResizeColumns="True"
+                              ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                              ScrollViewer.AllowAutoHide="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Time" Binding="{Binding Time, StringFormat='{}{0:HH:mm:ss}'}" Width="70" />
+                            <DataGridTemplateColumn Header="Data" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ShortData}" ToolTip.Tip="{Binding Data}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   VerticalAlignment="Center" Margin="4,0" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Proxy" Binding="{Binding Proxy}" Width="110" />
+                            <DataGridTemplateColumn Header="Type" Width="80">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Type}"
+                                                   Foreground="{Binding Type, Converter={x:Static ob:HitTypeColorConverter.Instance}}"
+                                                   VerticalAlignment="Center" Margin="4,0" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Capture" Width="560">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding CapturedData}" ToolTip.Tip="{Binding CapturedData}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   VerticalAlignment="Center" Margin="4,0" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Copy Selected Data" Click="CopySelectedData_Click" />
+                                <MenuItem Header="Copy Selected Proxy" Click="CopySelectedProxy_Click" />
+                                <MenuItem Header="Copy Selected Data with Capture" Click="CopySelectedCapture_Click" />
+                                <MenuItem Header="Select All" Click="SelectAllHits_Click" />
+                                <Separator />
+                                <MenuItem Header="Save Selected to File" Click="SaveSelectedHits_Click" />
+                                <MenuItem Header="Save All to File" Click="SaveAllHits_Click" />
+                                <Separator />
+                                <MenuItem Header="Send To Debugger" Click="SendToDebugger_Click" />
+                                <MenuItem Header="Show Last Response in Browser" Click="ShowHTML_Click" />
+                                <MenuItem Header="Show Full Log" Click="ShowHitLog_Click" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                    </DataGrid>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Content="Hits" Padding="8,3" Margin="0,0,3,0" Click="HitsFilter_Click" />
+                            <Button Content="Custom" Padding="8,3" Margin="0,0,3,0" Click="CustomFilter_Click" />
+                            <Button Content="ToCheck" Padding="8,3" Click="ToCheckFilter_Click" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                            <TextBlock Text="{Binding TimerDays}" />
+                            <TextBlock Text="d " />
+                            <TextBlock Text="{Binding TimerHours}" />
+                            <TextBlock Text=":" />
+                            <TextBlock Text="{Binding TimerMinutes}" />
+                            <TextBlock Text=":" />
+                            <TextBlock Text="{Binding TimerSeconds}" />
+                        </StackPanel>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TimeLeft}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center"
+                                   Foreground="{StaticResource BrushTextSecondary}" />
+                    </Grid>
+                </Grid>
+
+                <!-- Left: bots list -->
+                <DataGrid Grid.Column="0" Grid.Row="0" ItemsSource="{Binding ViewModel.Bots}"
+                          AutoGenerateColumns="False" IsReadOnly="True"
+                          DataContext="{Binding ViewModel}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                          ScrollViewer.AllowAutoHide="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="40" />
+                        <DataGridTemplateColumn Header="Data" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ShortData}" ToolTip.Tip="{Binding Data}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center" Margin="4,0" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Proxy" Binding="{Binding Proxy}" Width="120" />
+                        <DataGridTemplateColumn Header="Status" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Status}"
+                                               Foreground="{Binding Status, Converter={x:Static ob:HitTypeColorConverter.Instance}}"
+                                               VerticalAlignment="Center" Margin="4,0" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Bottom-left: runner console log + back overlay -->
+                <Grid Grid.Column="0" Grid.Row="2" DataContext="{Binding ViewModel}">
+                    <Border Classes="Card" Padding="0" ClipToBounds="True">
+                        <Grid RowDefinitions="26,*">
+                            <!-- console header -->
+                            <Border Grid.Row="0" Padding="8,0"
+                                    Background="{StaticResource BrushSurfaceRaised}"
+                                    BorderBrush="{StaticResource BrushBorder}" BorderThickness="0,0,0,1">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6"
+                                                VerticalAlignment="Center">
+                                        <PathIcon Width="11" Height="11" Foreground="{StaticResource BrushAccent}"
+                                                  Data="M20,19V7H4V19H20M20,3A2,2 0 0,1 22,5V19A2,2 0 0,1 20,21H4A2,2 0 0,1 2,19V5C2,3.89 2.9,3 4,3H20M13,17V15H18V17H13M9.58,13L5.57,9H8.4L11.7,12.3C12.09,12.69 12.09,13.33 11.7,13.72L8.42,17H5.59L9.58,13Z" />
+                                        <TextBlock Text="RUNNER LOG" FontSize="{StaticResource FontSizeXS}"
+                                                   FontWeight="Bold" VerticalAlignment="Center"
+                                                   Foreground="{StaticResource BrushTextSecondary}" />
+                                        <TextBlock Text="{Binding Id, StringFormat='· Runner {0}'}"
+                                                   FontSize="{StaticResource FontSizeXS}" VerticalAlignment="Center"
+                                                   Foreground="{StaticResource BrushAccentMuted}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4"
+                                                VerticalAlignment="Center">
+                                        <Button Padding="7,2" Click="RunnerLogCopy_Click" ToolTip.Tip="Copy log">
+                                            <PathIcon Width="11" Height="11" Foreground="{StaticResource BrushTextSecondary}"
+                                                      Data="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                                        </Button>
+                                        <Button Padding="7,2" ToolTip.Tip="Clear log"
+                                                Command="{Binding $parent[UserControl].DataContext.ClearLogCommand}">
+                                            <PathIcon Width="11" Height="11" Foreground="{StaticResource BrushError}"
+                                                      Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- console lines -->
+                            <ScrollViewer Grid.Row="1" x:Name="RunnerLogScroll" Padding="8,4"
+                                          Background="{StaticResource BrushSurfaceAlt}">
+                                <ItemsControl ItemsSource="{Binding $parent[UserControl].DataContext.LogLines}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:RunnerLogLine">
+                                            <Grid ColumnDefinitions="Auto,*">
+                                                <TextBlock Text="{Binding Time}" FontFamily="{StaticResource FontMono}"
+                                                           FontSize="10.5" Margin="0,0,8,0" VerticalAlignment="Top"
+                                                           Foreground="{StaticResource BrushTextMuted}" />
+                                                <TextBlock Grid.Column="1" Text="{Binding Text}"
+                                                           Foreground="{Binding Brush}" TextWrapping="Wrap"
+                                                           FontFamily="{StaticResource FontMono}" FontSize="10.5" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <Button HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                            Command="{Binding $parent[UserControl].DataContext.BackToListCommand}"
+                            Padding="8,4" Margin="6">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <PathIcon Data="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" Width="14" Height="14" />
+                            <TextBlock Text="Back" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+
+                <!-- Horizontal splitter -->
+                <GridSplitter Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" ResizeDirection="Rows"
+                              ResizeBehavior="PreviousAndNext" Height="8"
+                              Background="{StaticResource BrushBorder}" ZIndex="10" />
+
+                <!-- Stats — DATA | PROXIES vertical columns -->
+                <Grid Grid.Column="2" Grid.Row="2" DataContext="{Binding ViewModel}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="DATA" FontWeight="Bold" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Total: " />
+                            <TextBlock Text="{Binding TestedCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Hits: " Foreground="{StaticResource BrushSuccess}" />
+                            <TextBlock Text="{Binding HitCount}" Foreground="{StaticResource BrushSuccess}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Custom: " Foreground="{StaticResource BrushCustom}" />
+                            <TextBlock Text="{Binding CustomCount}" Foreground="{StaticResource BrushCustom}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Bad: " Foreground="{StaticResource BrushError}" />
+                            <TextBlock Text="{Binding FailCount}" Foreground="{StaticResource BrushError}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Retries: " Foreground="{StaticResource BrushWarning}" />
+                            <TextBlock Text="{Binding RetryCount}" Foreground="{StaticResource BrushWarning}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="To Check: " Foreground="{StaticResource BrushInfo}" />
+                            <TextBlock Text="{Binding ToCheckCount}" Foreground="{StaticResource BrushInfo}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="PROXIES" FontWeight="Bold" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Total: " />
+                            <TextBlock Text="{Binding TotalProxiesCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Alive: " />
+                            <TextBlock Text="{Binding AliveProxiesCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Banned: " />
+                            <TextBlock Text="{Binding BannedProxiesCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Bad: " />
+                            <TextBlock Text="{Binding BadProxiesCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="CPM: " FontWeight="Bold" ToolTip.Tip="Checks per minute" />
+                            <TextBlock Text="{Binding CPM}" FontWeight="Bold" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Credit: " FontWeight="Bold" ToolTip.Tip="Remaining balance of your captcha solving service account" />
+                            <TextBlock Text="{Binding BalanceString}" FontWeight="Bold" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

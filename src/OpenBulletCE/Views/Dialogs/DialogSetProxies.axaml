@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="OpenBulletCE.Views.Dialogs.DialogSetProxies"
+        Title="Set Proxies" Width="300" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="{StaticResource BrushBackground}">
+
+    <StackPanel Margin="16" Spacing="12">
+        <TextBlock Text="Proxy mode:" Classes="Secondary" />
+
+        <StackPanel Spacing="8">
+            <RadioButton x:Name="DefaultRadio" Content="Default" GroupName="ProxMode" IsChecked="True" />
+            <RadioButton x:Name="OnRadio" Content="On" GroupName="ProxMode" />
+            <RadioButton x:Name="OffRadio" Content="Off" GroupName="ProxMode" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+            <Button Classes="Accent" Content="OK" MinWidth="80" Click="Accept_Click" />
+            <Button Content="Cancel" MinWidth="80" Click="Cancel_Click" />
+        </StackPanel>
+    </StackPanel>
+</Window>

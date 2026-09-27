@@ -1,0 +1,109 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenBulletCE.ViewModels.Pages"
+             xmlns:ob="clr-namespace:OpenBulletCE"
+             mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Pages.HitsDBView"
+             x:DataType="vm:HitsDBPageViewModel">
+
+    <Design.DataContext>
+        <vm:HitsDBPageViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="36" />
+        </Grid.RowDefinitions>
+
+        <!-- Top filters -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Command="{Binding DeleteDuplicatesCommand}" Padding="8,4" Margin="0,0,4,0">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="14" Height="14" Foreground="{StaticResource BrushError}" />
+                    <TextBlock Text="Del. Dupes" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding DeleteFilteredCommand}" Padding="8,4" Margin="0,0,4,0">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="14" Height="14" Foreground="{StaticResource BrushError}" />
+                    <TextBlock Text="Del. Filtered" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding PurgeDBCommand}" Padding="8,4" Margin="0,0,4,0">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="14" Height="14" Foreground="{StaticResource BrushError}" />
+                    <TextBlock Text="Purge" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding RefreshCommand}" Padding="8,4" Margin="0,0,4,0">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M 17.65,6.35 C 16.2,4.9 14.21,4 12,4 C 7.58,4 4.01,7.58 4.01,12 C 4.01,16.42 7.58,20 12,20 C 15.73,20 18.84,17.45 19.73,14 L 17.65,14 C 16.83,16.33 14.61,18 12,18 C 8.69,18 6,15.31 6,12 C 6,8.69 8.69,6 12,6 C 13.66,6 15.14,6.69 16.22,7.78 L 13,11 L 20,11 L 20,4 Z" Width="14" Height="14" />
+                    <TextBlock Text="Refresh" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <TextBlock Text="Config:" VerticalAlignment="Center" Margin="12,0,4,0" />
+            <ComboBox SelectedItem="{Binding ConfigFilter}" ItemsSource="{Binding ConfigsList}" MinWidth="140" />
+
+            <TextBlock Text="Type:" VerticalAlignment="Center" Margin="12,0,4,0" />
+            <ComboBox x:Name="TypeFilterCombo" SelectedItem="{Binding TypeFilter}" MinWidth="110" />
+
+            <TextBlock Text="Hits:" VerticalAlignment="Center" Margin="12,0,4,0" />
+            <TextBlock Text="{Binding Filtered}" VerticalAlignment="Center" FontWeight="Bold" />
+        </StackPanel>
+
+        <!-- List -->
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Hits}" x:Name="HitsGrid"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  SelectionMode="Extended" CanUserResizeColumns="True" CanUserSortColumns="True"
+                  DoubleTapped="HitsGrid_DoubleTapped">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Data" Binding="{Binding Data}" Width="150" />
+                <DataGridTemplateColumn Header="Type" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Type}"
+                                       Foreground="{Binding Type, Converter={x:Static ob:HitTypeColorConverter.Instance}}"
+                                       VerticalAlignment="Center" Margin="4,0" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Config" Binding="{Binding ConfigName}" Width="100" />
+                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" Width="130" />
+                <DataGridTextColumn Header="Wordlist" Binding="{Binding WordlistName}" Width="100" />
+                <DataGridTextColumn Header="Proxy" Binding="{Binding Proxy}" Width="100" />
+                <DataGridTextColumn Header="Captured Data" Binding="{Binding CapturedString}" Width="*" />
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Copy Selected">
+                        <MenuItem Header="Data" Click="CopyData_Click" />
+                        <MenuItem Header="Proxy" Click="CopyProxy_Click" />
+                        <MenuItem Header="Data with Capture" Click="CopyCapture_Click" />
+                    </MenuItem>
+                    <MenuItem Header="Delete" Click="DeleteSelected_Click" />
+                    <MenuItem Header="Select All" Click="SelectAll_Click" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+
+        <!-- Bottom bar — search capture -->
+        <Grid Grid.Row="2" Margin="0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Search for Capture:" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBox Grid.Column="1" Text="{Binding SearchString}" VerticalAlignment="Center" />
+            <Button Grid.Column="2" Content="Search" Padding="14,4" Margin="8,0,0,0" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="3" VerticalAlignment="Center" Margin="16,0,0,0"
+                       Text="{Binding Total, StringFormat='Total Hits: {0}'}" Foreground="{StaticResource BrushTextSecondary}" />
+        </Grid>
+    </Grid>
+</UserControl>

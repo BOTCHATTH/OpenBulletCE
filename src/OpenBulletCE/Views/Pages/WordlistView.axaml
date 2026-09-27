@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenBulletCE.ViewModels.Pages"
+             mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Pages.WordlistView"
+             x:DataType="vm:WordlistPageViewModel">
+
+    <Design.DataContext>
+        <vm:WordlistPageViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Command="{Binding AddWordlistCommand}" Padding="8,4" Margin="0,0,4,0">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Width="14" Height="14" Foreground="{StaticResource BrushSuccess}" />
+                    <TextBlock Text="Add" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding RemoveSelectedCommand}" Padding="8,4" Margin="0,0,4,0">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="14" Height="14" Foreground="{StaticResource BrushError}" />
+                    <TextBlock Text="Delete" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding RemoveAllCommand}" Padding="8,4" Margin="0,0,4,0">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="14" Height="14" Foreground="{StaticResource BrushError}" />
+                    <TextBlock Text="Delete All" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding DeleteNotFoundCommand}" Padding="8,4" Margin="0,0,4,0"
+                    ToolTip.Tip="Deletes missing wordlists from the list">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" Width="14" Height="14" />
+                    <TextBlock Text="Delete Not Found" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <TextBox Text="{Binding SearchString}" Width="150" Margin="12,0,4,0" Watermark="Filter..." />
+            <Button Padding="8,4" Command="{Binding SearchCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" Width="14" Height="14" />
+                    <TextBlock Text="Search" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <!-- List -->
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Wordlists}" x:Name="WordlistGrid"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  SelectedItem="{Binding SelectedItem}"
+                  SelectionMode="Extended" CanUserResizeColumns="True" CanUserSortColumns="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+                <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="2*" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="100" />
+                <DataGridTextColumn Header="Purpose" Binding="{Binding Purpose}" Width="120" />
+                <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="80" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

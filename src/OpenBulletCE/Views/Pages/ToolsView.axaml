@@ -1,0 +1,130 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenBulletCE.ViewModels.Pages"
+             mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Pages.ToolsView"
+             x:DataType="vm:ToolsPageViewModel">
+
+    <Design.DataContext>
+        <vm:ToolsPageViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Sub-menu -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <RadioButton Classes="SubNavItem" GroupName="ToolsNav" Content="List Generator"
+                         Command="{Binding OpenToolCommand}" CommandParameter="ListGenerator"
+                         IsChecked="{Binding IsListGeneratorActive, Mode=OneWay}" />
+            <RadioButton Classes="SubNavItem" GroupName="ToolsNav" Content="Selenium Tools"
+                         Command="{Binding OpenToolCommand}" CommandParameter="SeleniumTools"
+                         IsChecked="{Binding IsSeleniumToolsActive, Mode=OneWay}" />
+            <RadioButton Classes="SubNavItem" GroupName="ToolsNav" Content="Database"
+                         Command="{Binding OpenToolCommand}" CommandParameter="Database"
+                         IsChecked="{Binding IsDatabaseActive, Mode=OneWay}" />
+        </StackPanel>
+
+        <!-- Tool content -->
+        <ContentControl Grid.Row="1" Content="{Binding CurrentTool}">
+                    <ContentControl.DataTemplates>
+                        <DataTemplate DataType="{x:Type vm:ListGeneratorViewModel}">
+                            <ScrollViewer>
+                                <StackPanel Margin="16" Spacing="12" MaxWidth="500" HorizontalAlignment="Left">
+                                    <TextBlock Text="List Generator" FontSize="{StaticResource FontSizeLG}"
+                                               FontWeight="SemiBold" Foreground="{StaticResource BrushAccent}" />
+
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Mask" Classes="Secondary" />
+                                        <TextBox Text="{Binding Mask}" Watermark="e.g. 657438****:**" />
+                                    </StackPanel>
+
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Allowed Characters" Classes="Secondary" />
+                                        <TextBox Text="{Binding AllowedCharacters}" />
+                                        <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,4,0,0">
+                                            <Button Content="a-z" Padding="8,4" Command="{Binding AddLowercaseCommand}" />
+                                            <Button Content="A-Z" Padding="8,4" Command="{Binding AddUppercaseCommand}" />
+                                            <Button Content="0-9" Padding="8,4" Command="{Binding AddDigitsCommand}" />
+                                            <Button Content="Clear" Padding="8,4" Command="{Binding ClearCharsCommand}" />
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Spacing="4">
+                                        <CheckBox Content="Only Luhn-valid" IsChecked="{Binding OnlyLuhn}" />
+                                        <CheckBox Content="Auto-import to Wordlists" IsChecked="{Binding AutoImport}" />
+                                    </StackPanel>
+
+                                    <Border Classes="Card" Padding="8" Margin="0,4">
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Text="{Binding OutputLines, StringFormat='Lines: {0:N0}'}"
+                                                       Foreground="{StaticResource BrushTextPrimary}" />
+                                            <TextBlock Text="{Binding OutputSize, StringFormat='Size: {0}'}"
+                                                       Foreground="{StaticResource BrushTextSecondary}" />
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Button Classes="Accent" Content="Generate"
+                                            Command="{Binding GenerateCommand}"
+                                            HorizontalAlignment="Stretch" />
+                                </StackPanel>
+                            </ScrollViewer>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type vm:SeleniumToolsViewModel}">
+                            <StackPanel Margin="16" Spacing="10" MaxWidth="500" HorizontalAlignment="Left">
+                                <TextBlock Text="Selenium Tools" FontSize="{StaticResource FontSizeLG}"
+                                           FontWeight="SemiBold" Foreground="{StaticResource BrushAccent}" />
+
+                                <Border Classes="Card" Padding="12,10">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="KILL PROCESSES" Classes="SectionHeader" />
+                                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+                                            <Button Grid.Row="0" Grid.Column="0" Content="Kill ChromeDriver"
+                                                    Command="{Binding KillChromedriversCommand}" Margin="0,0,4,4" />
+                                            <Button Grid.Row="0" Grid.Column="1" Content="Kill GeckoDriver"
+                                                    Command="{Binding KillGeckodriversCommand}" Margin="4,0,0,4" />
+                                            <Button Grid.Row="1" Grid.Column="0" Content="Kill Chrome"
+                                                    Command="{Binding KillChromesCommand}" Margin="0,4,4,0" />
+                                            <Button Grid.Row="1" Grid.Column="1" Content="Kill Firefox"
+                                                    Command="{Binding KillFirefoxesCommand}" Margin="4,4,0,0" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Classes="Card" Padding="12,10">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="CLEAN CACHE" Classes="SectionHeader" />
+                                        <Grid ColumnDefinitions="*,*">
+                                            <Button Grid.Column="0" Content="Clean Chrome Cache"
+                                                    Command="{Binding CleanChromeCacheCommand}" Margin="0,0,4,0" />
+                                            <Button Grid.Column="1" Content="Clean Firefox Cache"
+                                                    Command="{Binding CleanFirefoxCacheCommand}" Margin="4,0,0,0" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type vm:DatabaseViewModel}">
+                            <StackPanel Margin="16" Spacing="10" MaxWidth="620" HorizontalAlignment="Left">
+                                <Border Classes="Card" Padding="12,10">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Button Content="Shrink" Command="{Binding ShrinkCommand}" Padding="12,6"
+                                                IsEnabled="{Binding !IsShrinking}" />
+                                        <TextBlock Text="Reduces the database filesize by removing unused space. Please backup the database first. This might take some time, do not close OB."
+                                                   VerticalAlignment="Center" TextWrapping="Wrap"
+                                                   Foreground="{StaticResource BrushTextSecondary}" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ContentControl.DataTemplates>
+        </ContentControl>
+    </Grid>
+</UserControl>

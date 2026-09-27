@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="OpenBulletCE.Views.Dialogs.DialogSelectBots"
+        Title="Select Bots" Width="300" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="{StaticResource BrushBackground}">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Number of bots:" Classes="Secondary" Margin="0,0,0,8" />
+
+        <NumericUpDown x:Name="BotsInput" Grid.Row="1" Minimum="1" Maximum="200"
+                       Value="1" Increment="1" />
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8"
+                    HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Classes="Accent" Content="OK" MinWidth="80" Click="Accept_Click" />
+            <Button Content="Cancel" MinWidth="80" Click="Cancel_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

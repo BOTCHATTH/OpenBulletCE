@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>CurlTls</AssemblyName>
+    <RootNamespace>CurlTls</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Output straight into the app's Plugins folder so it's picked up on the next scan -->
+    <OutDir>..\..\src\OpenBulletCE\bin\Debug\net8.0\Plugins</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- References resolved against the already-loaded app assemblies; don't copy them -->
+    <Reference Include="PluginFramework">
+      <HintPath>..\..\src\OpenBulletCE\bin\Debug\net8.0\PluginFramework.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="RuriLib">
+      <HintPath>..\..\src\OpenBulletCE\bin\Debug\net8.0\RuriLib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Extreme.Net">
+      <HintPath>..\..\src\OpenBulletCE\bin\Debug\net8.0\Extreme.Net.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Ship the native impersonate library next to the plugin -->
+    <None Include="native\libcurl-impersonate.dll" Condition="Exists('native\libcurl-impersonate.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

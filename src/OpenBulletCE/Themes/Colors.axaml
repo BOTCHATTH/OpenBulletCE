@@ -1,0 +1,236 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ═══ OB Dark Theme — modern blue-grey (VS Code / Discord) ═══ -->
+
+    <!-- Base surfaces — very dark blue-grey -->
+    <Color x:Key="OBBackground">#FF0B0E14</Color>
+    <Color x:Key="OBSurface">#FF111827</Color>
+    <Color x:Key="OBSurfaceAlt">#FF0D1117</Color>
+    <Color x:Key="OBSurfaceRaised">#FF182032</Color>
+    <Color x:Key="OBSurfaceHover">#FF1A2236</Color>
+    <Color x:Key="OBBorder">#FF25304A</Color>
+    <Color x:Key="OBBorderHover">#FF374A6B</Color>
+
+    <!-- Accent — milk light blue pops hard on blue-grey -->
+    <Color x:Key="OBAccent">#FF8FCDFF</Color>
+    <Color x:Key="OBAccentHover">#FFB0DEFF</Color>
+    <Color x:Key="OBAccentPressed">#FF6FB8EA</Color>
+    <Color x:Key="OBAccentMuted">#FF5591CC</Color>
+    <Color x:Key="OBAccentSubtle">#FF16324A</Color>
+    <Color x:Key="OBAccentInk">#FF0A1520</Color>
+
+    <!-- Semantic — original OB colors -->
+    <Color x:Key="OBSuccess">#FFADFF2F</Color>   <!-- GreenYellow — hits -->
+    <Color x:Key="OBSuccessMuted">#FF2D4A00</Color>
+    <Color x:Key="OBWarning">#FFFFFF00</Color>    <!-- Yellow — retry -->
+    <Color x:Key="OBWarningMuted">#FF3D3D14</Color>
+    <Color x:Key="OBError">#FFFF6347</Color>      <!-- Tomato — bad/fail -->
+    <Color x:Key="OBErrorMuted">#FF3E2020</Color>
+    <Color x:Key="OBInfo">#FF7FFFD4</Color>       <!-- Aquamarine — tocheck -->
+    <Color x:Key="OBInfoMuted">#FF1A3A38</Color>
+    <Color x:Key="OBCustom">#FFFF8C00</Color>     <!-- DarkOrange — custom -->
+    <Color x:Key="OBCustomMuted">#FF3E2A0F</Color>
+
+    <!-- Text — cool whites -->
+    <Color x:Key="OBTextPrimary">#FFDCE3EC</Color>
+    <Color x:Key="OBTextSecondary">#FF9BA6B8</Color>
+    <Color x:Key="OBTextTertiary">#FF6B7387</Color>
+    <Color x:Key="OBTextMuted">#FF4E5568</Color>
+    <Color x:Key="OBTextDisabled">#FF3A4152</Color>
+
+    <!-- Menu -->
+    <Color x:Key="OBMenuSelected">#FF8FCDFF</Color>
+    <Color x:Key="OBSidebarBg">#FF111827</Color>
+    <Color x:Key="OBSidebarHover">#FF1A2236</Color>
+    <Color x:Key="OBSidebarActive">#FF16324A</Color>
+
+    <!-- Log colors -->
+    <Color x:Key="OBLogInfo">#FFDCDCDC</Color>
+    <Color x:Key="OBLogWarning">#FFFFFF00</Color>
+    <Color x:Key="OBLogError">#FFFF6347</Color>
+    <Color x:Key="OBLogSuccess">#FFADFF2F</Color>
+    <Color x:Key="OBLogCapture">#FF7FFFD4</Color>
+
+    <!-- ═══ Brushes ═══ -->
+    <SolidColorBrush x:Key="BrushBackground" Color="{StaticResource OBBackground}" />
+    <SolidColorBrush x:Key="BrushSurface" Color="{StaticResource OBSurface}" />
+    <SolidColorBrush x:Key="BrushSurfaceAlt" Color="{StaticResource OBSurfaceAlt}" />
+    <SolidColorBrush x:Key="BrushSurfaceRaised" Color="{StaticResource OBSurfaceRaised}" />
+    <SolidColorBrush x:Key="BrushSurfaceHover" Color="{StaticResource OBSurfaceHover}" />
+    <SolidColorBrush x:Key="BrushBorder" Color="{StaticResource OBBorder}" />
+    <SolidColorBrush x:Key="BrushBorderHover" Color="{StaticResource OBBorderHover}" />
+
+    <!-- Elevated surfaces — opaque, subtle top-lit gradient, crisp edge -->
+    <LinearGradientBrush x:Key="BrushGlassFill" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="#FF1C2334" Offset="0" />
+        <GradientStop Color="#FF161D2C" Offset="0.45" />
+        <GradientStop Color="#FF141B29" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="BrushGlassStroke" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="#FF39465E" Offset="0" />
+        <GradientStop Color="#FF252E44" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="BrushAccentGlass" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="#FFB9E1FF" Offset="0" />
+        <GradientStop Color="#FF8FCDFF" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="BrushGlassPill" Color="#FF1D3350" />
+    <SolidColorBrush x:Key="BrushGlassPop" Color="#FF161D2C" />
+
+    <SolidColorBrush x:Key="BrushAccent" Color="{StaticResource OBAccent}" />
+    <SolidColorBrush x:Key="BrushAccentHover" Color="{StaticResource OBAccentHover}" />
+    <SolidColorBrush x:Key="BrushAccentPressed" Color="{StaticResource OBAccentPressed}" />
+    <SolidColorBrush x:Key="BrushAccentMuted" Color="{StaticResource OBAccentMuted}" />
+    <SolidColorBrush x:Key="BrushAccentSubtle" Color="{StaticResource OBAccentSubtle}" />
+    <SolidColorBrush x:Key="BrushAccentInk" Color="{StaticResource OBAccentInk}" />
+
+    <SolidColorBrush x:Key="BrushSuccess" Color="{StaticResource OBSuccess}" />
+    <SolidColorBrush x:Key="BrushSuccessMuted" Color="{StaticResource OBSuccessMuted}" />
+    <SolidColorBrush x:Key="BrushWarning" Color="{StaticResource OBWarning}" />
+    <SolidColorBrush x:Key="BrushWarningMuted" Color="{StaticResource OBWarningMuted}" />
+    <SolidColorBrush x:Key="BrushError" Color="{StaticResource OBError}" />
+    <SolidColorBrush x:Key="BrushErrorMuted" Color="{StaticResource OBErrorMuted}" />
+    <SolidColorBrush x:Key="BrushInfo" Color="{StaticResource OBInfo}" />
+    <SolidColorBrush x:Key="BrushInfoMuted" Color="{StaticResource OBInfoMuted}" />
+    <SolidColorBrush x:Key="BrushCustom" Color="{StaticResource OBCustom}" />
+    <SolidColorBrush x:Key="BrushCustomMuted" Color="{StaticResource OBCustomMuted}" />
+
+    <SolidColorBrush x:Key="BrushTextPrimary" Color="{StaticResource OBTextPrimary}" />
+    <SolidColorBrush x:Key="BrushTextSecondary" Color="{StaticResource OBTextSecondary}" />
+    <SolidColorBrush x:Key="BrushTextTertiary" Color="{StaticResource OBTextTertiary}" />
+    <SolidColorBrush x:Key="BrushTextMuted" Color="{StaticResource OBTextMuted}" />
+    <SolidColorBrush x:Key="BrushTextDisabled" Color="{StaticResource OBTextDisabled}" />
+
+    <SolidColorBrush x:Key="BrushMenuSelected" Color="{StaticResource OBMenuSelected}" />
+    <SolidColorBrush x:Key="BrushSidebarBg" Color="{StaticResource OBSidebarBg}" />
+    <SolidColorBrush x:Key="BrushSidebarHover" Color="{StaticResource OBSidebarHover}" />
+    <SolidColorBrush x:Key="BrushSidebarActive" Color="{StaticResource OBSidebarActive}" />
+
+    <SolidColorBrush x:Key="BrushLogInfo" Color="{StaticResource OBLogInfo}" />
+    <SolidColorBrush x:Key="BrushLogWarning" Color="{StaticResource OBLogWarning}" />
+    <SolidColorBrush x:Key="BrushLogError" Color="{StaticResource OBLogError}" />
+    <SolidColorBrush x:Key="BrushLogSuccess" Color="{StaticResource OBLogSuccess}" />
+    <SolidColorBrush x:Key="BrushLogCapture" Color="{StaticResource OBLogCapture}" />
+
+    <!-- Spinner icons -->
+    <StreamGeometry x:Key="ObSpinUpIcon">M0,9 L6,0 12,9 z</StreamGeometry>
+    <StreamGeometry x:Key="ObSpinDownIcon">M0,0 L6,9 12,0 z</StreamGeometry>
+
+    <!-- Fonts -->
+    <FontFamily x:Key="FontBody">Segoe UI, Inter, Noto Sans, sans-serif</FontFamily>
+    <FontFamily x:Key="FontMono">Cascadia Code, JetBrains Mono, Consolas, monospace</FontFamily>
+
+    <!-- Sizes -->
+    <x:Double x:Key="FontSizeXS">10</x:Double>
+    <x:Double x:Key="FontSizeSM">11.5</x:Double>
+    <x:Double x:Key="FontSizeMD">13</x:Double>
+    <x:Double x:Key="FontSizeLG">14</x:Double>
+    <x:Double x:Key="FontSizeXL">18</x:Double>
+    <x:Double x:Key="FontSizeXXL">22</x:Double>
+
+    <!-- Spacing -->
+    <x:Double x:Key="SpacingXS">4</x:Double>
+    <x:Double x:Key="SpacingSM">8</x:Double>
+    <x:Double x:Key="SpacingMD">12</x:Double>
+    <x:Double x:Key="SpacingLG">16</x:Double>
+    <x:Double x:Key="SpacingXL">24</x:Double>
+
+    <!-- Corner radius -->
+    <CornerRadius x:Key="RadiusSM">3</CornerRadius>
+    <CornerRadius x:Key="RadiusMD">4</CornerRadius>
+    <CornerRadius x:Key="RadiusLG">6</CornerRadius>
+
+    <!-- compact spinner buttons for NumericUpDown: Fluent hardcodes MinWidth=34 on
+         side-by-side buttons (68px of chrome); this stacks two 24px arrows vertically -->
+    <ControlTheme x:Key="ObSpinButton" TargetType="RepeatButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextSecondary}" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ContentPresenter x:Name="PART_ContentPresenter"
+                                  Background="{TemplateBinding Background}"
+                                  Content="{TemplateBinding Content}"
+                                  Padding="{TemplateBinding Padding}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource BrushAccentSubtle}" />
+        </Style>
+        <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource BrushAccent}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.4" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type ButtonSpinner}" TargetType="ButtonSpinner">
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="Background" Value="{StaticResource BrushSurfaceAlt}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMD}" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DataValidationErrors>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            MinHeight="{TemplateBinding MinHeight}">
+                        <DockPanel>
+                            <Border DockPanel.Dock="Right"
+                                    BorderThickness="1,0,0,0"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    IsVisible="{TemplateBinding ShowButtonSpinner}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <RepeatButton Name="PART_IncreaseButton" Grid.Row="0"
+                                                  Theme="{StaticResource ObSpinButton}"
+                                                  Focusable="False"
+                                                  IsTabStop="{TemplateBinding IsTabStop}"
+                                                  Width="24"
+                                                  Foreground="{TemplateBinding Foreground}">
+                                        <PathIcon Width="9" Height="5" Data="{StaticResource ObSpinUpIcon}" />
+                                    </RepeatButton>
+                                    <RepeatButton Name="PART_DecreaseButton" Grid.Row="1"
+                                                  Theme="{StaticResource ObSpinButton}"
+                                                  Focusable="False"
+                                                  IsTabStop="{TemplateBinding IsTabStop}"
+                                                  Width="24"
+                                                  Foreground="{TemplateBinding Foreground}">
+                                        <PathIcon Width="9" Height="5" Data="{StaticResource ObSpinDownIcon}" />
+                                    </RepeatButton>
+                                </Grid>
+                            </Border>
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Padding="{TemplateBinding Padding}" />
+                        </DockPanel>
+                    </Border>
+                </DataValidationErrors>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:error">
+            <Setter Property="BorderBrush" Value="{StaticResource BrushError}" />
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>

@@ -1,0 +1,488 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenBulletCE.ViewModels.Pages"
+             xmlns:models="clr-namespace:OpenBulletCE.Models"
+             xmlns:ob="clr-namespace:OpenBulletCE"
+             mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Pages.SettingsView"
+             x:DataType="vm:SettingsPageViewModel">
+
+    <Design.DataContext>
+        <vm:SettingsPageViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+
+        <!-- ═══ Level 1: RuriLib | OpenBullet ═══ -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <RadioButton Classes="NavItem" GroupName="SettingsNav" Content="RuriLib"
+                         IsChecked="{Binding IsRLTabActive, Mode=OneWay}"
+                         Command="{Binding SwitchTabCommand}" CommandParameter="RL" />
+            <RadioButton Classes="NavItem" GroupName="SettingsNav" Content="OpenBullet"
+                         IsChecked="{Binding IsOBTabActive, Mode=OneWay}"
+                         Command="{Binding SwitchTabCommand}" CommandParameter="OB" />
+        </StackPanel>
+
+        <!-- ═══ Level 2: RuriLib sections ═══ -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center"
+                    IsVisible="{Binding RLMenuVisible}">
+            <RadioButton Classes="SubNavItem" GroupName="RLNav" Content="General"
+                         IsChecked="{Binding IsRLGeneralActive, Mode=OneWay}"
+                         Command="{Binding SwitchRLSectionCommand}" CommandParameter="General" />
+            <RadioButton Classes="SubNavItem" GroupName="RLNav" Content="Proxies"
+                         IsChecked="{Binding IsRLProxiesActive, Mode=OneWay}"
+                         Command="{Binding SwitchRLSectionCommand}" CommandParameter="Proxies" />
+            <RadioButton Classes="SubNavItem" GroupName="RLNav" Content="Captchas"
+                         IsChecked="{Binding IsRLCaptchasActive, Mode=OneWay}"
+                         Command="{Binding SwitchRLSectionCommand}" CommandParameter="Captchas" />
+            <RadioButton Classes="SubNavItem" GroupName="RLNav" Content="Selenium"
+                         IsChecked="{Binding IsRLSeleniumActive, Mode=OneWay}"
+                         Command="{Binding SwitchRLSectionCommand}" CommandParameter="Selenium" />
+        </StackPanel>
+
+        <!-- ═══ Level 2: OpenBullet sections ═══ -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center"
+                    IsVisible="{Binding OBMenuVisible}">
+            <RadioButton Classes="SubNavItem" GroupName="OBNav" Content="General"
+                         IsChecked="{Binding IsOBGeneralActive, Mode=OneWay}"
+                         Command="{Binding SwitchOBSectionCommand}" CommandParameter="General" />
+            <RadioButton Classes="SubNavItem" GroupName="OBNav" Content="Sounds"
+                         IsChecked="{Binding IsOBSoundsActive, Mode=OneWay}"
+                         Command="{Binding SwitchOBSectionCommand}" CommandParameter="Sounds" />
+            <RadioButton Classes="SubNavItem" GroupName="OBNav" Content="Sources"
+                         IsChecked="{Binding IsOBSourcesActive, Mode=OneWay}"
+                         Command="{Binding SwitchOBSectionCommand}" CommandParameter="Sources" />
+            <RadioButton Classes="SubNavItem" GroupName="OBNav" Content="Themes"
+                         IsChecked="{Binding IsOBThemesActive, Mode=OneWay}"
+                         Command="{Binding SwitchOBSectionCommand}" CommandParameter="Themes" />
+        </StackPanel>
+
+        <!-- ══════════ RURILIB SECTIONS ══════════ -->
+
+        <!-- RL / General -->
+        <ScrollViewer Grid.Row="2" IsVisible="{Binding ShowRLGeneral}">
+            <StackPanel Spacing="8" MaxWidth="700" Margin="0,4,0,0">
+                <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" >
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Wait Time (ms)" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="0" Grid.Column="1" Value="{Binding RLSettings.RLSettings.General.WaitTime, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="0" Maximum="60000" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Request Timeout (s)" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding RLSettings.RLSettings.General.RequestTimeout, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="1" Maximum="300" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Max Hits" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding RLSettings.RLSettings.General.MaxHits, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="0" Maximum="999999" />
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Bot Display Mode" VerticalAlignment="Center" />
+                    <ComboBox x:Name="BotsDisplayModeCombo" Grid.Row="3" Grid.Column="1" SelectedItem="{Binding RLSettings.RLSettings.General.BotsDisplayMode}" />
+                    <CheckBox Grid.Row="4" Grid.Column="1" Content="Enable Bot Log" IsChecked="{Binding RLSettings.RLSettings.General.EnableBotLog}" />
+                    <CheckBox Grid.Row="5" Grid.Column="1" Content="Save Last Source" IsChecked="{Binding RLSettings.RLSettings.General.SaveLastSource}" />
+                    <CheckBox Grid.Row="6" Grid.Column="1" Content="Send ToCheck on Abort" IsChecked="{Binding RLSettings.RLSettings.General.SendToCheckOnAbort}" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- RL / Proxies -->
+        <ScrollViewer Grid.Row="2" IsVisible="{Binding ShowRLProxies}">
+            <StackPanel Spacing="8" MaxWidth="700" Margin="0,4,0,0">
+                <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                    <CheckBox Grid.Row="0" Grid.Column="1" Content="Concurrent Use" IsChecked="{Binding RLSettings.RLSettings.Proxies.ConcurrentUse}" />
+                    <CheckBox Grid.Row="1" Grid.Column="1" Content="Never Ban" IsChecked="{Binding RLSettings.RLSettings.Proxies.NeverBan}" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Ban Loop Evasion" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding RLSettings.RLSettings.Proxies.BanLoopEvasion, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="1" Maximum="10000" />
+                    <CheckBox Grid.Row="3" Grid.Column="1" Content="Shuffle on Start" IsChecked="{Binding RLSettings.RLSettings.Proxies.ShuffleOnStart}" />
+                    <CheckBox Grid.Row="4" Grid.Column="1" Content="Reload Proxies" IsChecked="{Binding RLSettings.RLSettings.Proxies.Reload}" />
+                    <CheckBox Grid.Row="5" Grid.Column="1" Content="Always Get Clearance" IsChecked="{Binding RLSettings.RLSettings.Proxies.AlwaysGetClearance}" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- RL / Captchas -->
+        <ScrollViewer Grid.Row="2" IsVisible="{Binding ShowRLCaptchas}">
+            <StackPanel Spacing="8" MaxWidth="700" Margin="0,4,0,0">
+                <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Service" VerticalAlignment="Center" />
+                    <ComboBox x:Name="CaptchaServiceCombo" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding RLSettings.RLSettings.Captchas.CurrentService}" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="AntiCap Token" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding RLSettings.RLSettings.Captchas.AntiCapToken}" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="2Captcha Token" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding RLSettings.RLSettings.Captchas.TwoCapToken}" />
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="RuCaptcha Token" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding RLSettings.RLSettings.Captchas.RuCapToken}" />
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="SolveCaptcha Token" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding RLSettings.RLSettings.Captchas.SCToken}" />
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Custom 2Cap Domain" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding RLSettings.RLSettings.Captchas.CustomTwoCapDomain}" />
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Custom 2Cap Token" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding RLSettings.RLSettings.Captchas.CustomTwoCapToken}" />
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Timeout (s)" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="7" Grid.Column="1" Value="{Binding RLSettings.RLSettings.Captchas.Timeout, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="10" Maximum="600" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- RL / Selenium -->
+        <ScrollViewer Grid.Row="2" IsVisible="{Binding RLSelenium}">
+            <StackPanel Spacing="8" MaxWidth="700" Margin="0,4,0,0">
+                <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Browser" VerticalAlignment="Center" />
+                    <ComboBox x:Name="SeleniumBrowserCombo" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding RLSettings.RLSettings.Selenium.Browser}" />
+                    <CheckBox Grid.Row="1" Grid.Column="1" Content="Headless" IsChecked="{Binding RLSettings.RLSettings.Selenium.Headless}" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Chrome Path" VerticalAlignment="Center" />
+                    <DockPanel Grid.Row="2" Grid.Column="1">
+                        <Button DockPanel.Dock="Right" Content="..." Padding="10,4" Margin="4,0,0,0"
+                                Click="ChromePath_Click" ToolTip.Tip="Browse for the chrome executable" />
+                        <TextBox Text="{Binding RLSettings.RLSettings.Selenium.ChromeBinaryLocation}" />
+                    </DockPanel>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Firefox Path" VerticalAlignment="Center" />
+                    <DockPanel Grid.Row="3" Grid.Column="1">
+                        <Button DockPanel.Dock="Right" Content="..." Padding="10,4" Margin="4,0,0,0"
+                                Click="FirefoxPath_Click" ToolTip.Tip="Browse for the firefox executable" />
+                        <TextBox Text="{Binding RLSettings.RLSettings.Selenium.FirefoxBinaryLocation}" />
+                    </DockPanel>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Page Timeout (s)" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding RLSettings.RLSettings.Selenium.PageLoadTimeout, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="10" Maximum="600" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ══════════ OPENBULLET SECTIONS ══════════ -->
+
+        <!-- OB / General -->
+        <ScrollViewer Grid.Row="2" IsVisible="{Binding ShowOBGeneral}">
+            <StackPanel Spacing="8" MaxWidth="700" Margin="0,4,0,0">
+                <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                    <CheckBox Grid.Row="0" Grid.Column="1" Content="Enable Logging" IsChecked="{Binding OBSettings.General.EnableLogging}" />
+                    <CheckBox Grid.Row="1" Grid.Column="1" Content="Log to File" IsChecked="{Binding OBSettings.General.LogToFile}" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Log Buffer Size" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding OBSettings.General.LogBufferSize, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="100" Maximum="100000" />
+                    <CheckBox Grid.Row="3" Grid.Column="1" Content="Backup DB" IsChecked="{Binding OBSettings.General.BackupDB}" />
+                    <CheckBox Grid.Row="4" Grid.Column="1" Content="Recommended Bots" IsChecked="{Binding OBSettings.General.RecommendedBots}" />
+                    <CheckBox Grid.Row="5" Grid.Column="1" Content="Auto Create Runner" IsChecked="{Binding OBSettings.General.AutoCreateRunner}" />
+                    <CheckBox Grid.Row="6" Grid.Column="1" Content="Disable Quit Warning" IsChecked="{Binding OBSettings.General.DisableQuitWarning}" />
+                    <CheckBox Grid.Row="7" Grid.Column="1" Content="Always on Top" IsChecked="{Binding OBSettings.General.AlwaysOnTop}" />
+                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Default Author" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding OBSettings.General.DefaultAuthor}" />
+                    <CheckBox Grid.Row="9" Grid.Column="1" Content="Ignore WL on Dedupe" IsChecked="{Binding OBSettings.General.IgnoreWordlistOnHitDedupe}" />
+                </Grid>
+
+                <!-- Proxy check targets — URL + success key pairs like OB2 -->
+                <TextBlock Text="PROXY CHECK TARGETS" Classes="SectionHeader" Margin="0,8,0,0" />
+                <Grid ColumnDefinitions="*,14,*">
+                    <!-- Test URLs -->
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Test URLs" Classes="Secondary" />
+                        <ItemsControl ItemsSource="{Binding ProxySiteUrls}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <DockPanel Margin="0,1">
+                                        <Button Content="×" DockPanel.Dock="Right" Padding="8,0"
+                                                Command="{Binding $parent[UserControl].DataContext.RemoveProxySiteUrlCommand}"
+                                                CommandParameter="{Binding}" />
+                                        <TextBlock Text="{Binding}" VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <DockPanel>
+                            <Button Content="Add" DockPanel.Dock="Right" Padding="10,3"
+                                    Command="{Binding AddProxySiteUrlCommand}" />
+                            <TextBox Text="{Binding NewProxySiteUrl}" Watermark="https://..." />
+                        </DockPanel>
+                    </StackPanel>
+                    <!-- Success keys -->
+                    <StackPanel Grid.Column="2" Spacing="4">
+                        <TextBlock Text="Success Keys" Classes="Secondary" />
+                        <ItemsControl ItemsSource="{Binding ProxyKeys}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <DockPanel Margin="0,1">
+                                        <Button Content="×" DockPanel.Dock="Right" Padding="8,0"
+                                                Command="{Binding $parent[UserControl].DataContext.RemoveProxyKeyCommand}"
+                                                CommandParameter="{Binding}" />
+                                        <TextBlock Text="{Binding}" VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <DockPanel>
+                            <Button Content="Add" DockPanel.Dock="Right" Padding="10,3"
+                                    Command="{Binding AddProxyKeyCommand}" />
+                            <TextBox Text="{Binding NewProxyKey}" Watermark="key to find..." />
+                        </DockPanel>
+                    </StackPanel>
+                </Grid>
+
+                <!-- MCP server -->
+                <TextBlock Text="MCP SERVER" Classes="SectionHeader" Margin="0,8,0,0" />
+                <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                    <CheckBox Grid.Row="0" Grid.Column="1" Content="Enable MCP server (AI agents)"
+                              IsChecked="{Binding OBSettings.Mcp.Enabled}" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Port" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="1" Grid.Column="1" Width="110" HorizontalAlignment="Left"
+                                   Value="{Binding OBSettings.Mcp.Port, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}"
+                                   Minimum="1024" Maximum="65535" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Bind Address" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding OBSettings.Mcp.BindAddress}" />
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="API Key" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding OBSettings.Mcp.ApiKey}"
+                             Watermark="empty = no auth" />
+                </Grid>
+                <TextBlock Text="Endpoint: http://{bind}:{port}/mcp — changes apply on next launch."
+                           Classes="Secondary" FontSize="11" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- OB / Sounds -->
+        <ScrollViewer Grid.Row="2" IsVisible="{Binding ShowOBSounds}">
+            <StackPanel Spacing="8" MaxWidth="700" Margin="0,4,0,0">
+                <CheckBox Content="Enable" IsChecked="{Binding OBSettings.Sounds.EnableSounds}" />
+                <TextBlock Text="On-Hit Sound" Classes="Secondary" />
+                <TextBox Text="{Binding OBSettings.Sounds.OnHitSound}" />
+                <TextBlock Text="On-Reload Sound" Classes="Secondary" />
+                <TextBox Text="{Binding OBSettings.Sounds.OnReloadSound}" />
+                <TextBlock Text="NOTE: Custom sounds must be placed in the Sounds subdirectory and have a .wav extension!"
+                           Foreground="{StaticResource BrushCustom}" TextWrapping="Wrap" Margin="0,8,0,0" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- OB / Sources -->
+        <Grid Grid.Row="2" IsVisible="{Binding ShowOBSources}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="6">
+                <Button Content="Add Source" Command="{Binding AddSourceCommand}" Padding="12,4" />
+                <Button Content="Clear Sources" Command="{Binding ClearSourcesCommand}" Padding="12,4" />
+            </StackPanel>
+            <ScrollViewer Grid.Row="1" Margin="0,8,0,0">
+                <ItemsControl ItemsSource="{Binding OBSettings.Sources.Sources}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:Source">
+                            <Grid Margin="0,2" ColumnDefinitions="Auto,140,110,Auto,120,Auto,100,Auto,100,Auto">
+                                <TextBlock Grid.Column="0" Text="API Url:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <TextBox Grid.Column="1" Text="{Binding ApiUrl}" />
+                                <ComboBox Grid.Column="2" Margin="6,0" SelectedItem="{Binding Auth}" Loaded="AuthCombo_Loaded" />
+                                <TextBlock Grid.Column="3" Text="API Key:" VerticalAlignment="Center" Margin="0,0,6,0"
+                                           IsVisible="{Binding ApiKeyVisible}" />
+                                <TextBox Grid.Column="4" Text="{Binding ApiKey}" IsVisible="{Binding ApiKeyVisible}" />
+                                <TextBlock Grid.Column="5" Text="User:" VerticalAlignment="Center" Margin="6,0"
+                                           IsVisible="{Binding UserPassVisible}" />
+                                <TextBox Grid.Column="6" Text="{Binding Username}" IsVisible="{Binding UserPassVisible}" />
+                                <TextBlock Grid.Column="7" Text="Pass:" VerticalAlignment="Center" Margin="6,0"
+                                           IsVisible="{Binding UserPassVisible}" />
+                                <TextBox Grid.Column="8" Text="{Binding Password}" IsVisible="{Binding UserPassVisible}" />
+                                <Button Grid.Column="9" Content="Remove" Padding="10,3" Margin="8,0,0,0"
+                                        Command="{Binding $parent[UserControl].DataContext.RemoveSourceCommand}"
+                                        CommandParameter="{Binding}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- OB / Themes — OB2-style Customization -->
+        <ScrollViewer Grid.Row="2" IsVisible="{Binding ShowOBThemes}">
+            <StackPanel Margin="0,4,0,0" Spacing="10">
+
+                <TextBlock Text="Customization" Classes="SectionHeader" />
+                <StackPanel Orientation="Horizontal" Spacing="20">
+                    <CheckBox Content="Play a sound when a hit is found"
+                              IsChecked="{Binding OBSettings.Sounds.EnableSounds}" />
+                    <CheckBox Content="Enable word wrap in text editor"
+                              IsChecked="{Binding OBSettings.Themes.WordWrap}" />
+                </StackPanel>
+
+                <Grid ColumnDefinitions="*,14,*,14,*">
+                    <!-- BACKGROUND COLORS -->
+                    <StackPanel Grid.Column="0" Spacing="6">
+                        <TextBlock Text="Background colors" Foreground="{StaticResource BrushCustom}" />
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Main" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.BackgroundMain, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.BackgroundMain}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Secondary" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.BackgroundSecondary, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.BackgroundSecondary}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Inputs" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.BackgroundInput, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.BackgroundInput}" Width="92" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- FOREGROUND COLORS -->
+                    <StackPanel Grid.Column="2" Spacing="6">
+                        <TextBlock Text="Foreground colors" Foreground="{StaticResource BrushCustom}" />
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Main" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.ForegroundMain, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.ForegroundMain}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Good" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.ForegroundGood, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.ForegroundGood}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Bad" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.ForegroundBad, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.ForegroundBad}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Custom" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.ForegroundCustom, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.ForegroundCustom}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Retry" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.ForegroundRetry, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.ForegroundRetry}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Banned" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.ForegroundBanned, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.ForegroundBanned}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="To Check" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.ForegroundToCheck, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.ForegroundToCheck}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Menu Sel." Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.ForegroundMenuSelected, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.ForegroundMenuSelected}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Inputs" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.ForegroundInput, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.ForegroundInput}" Width="92" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- BUTTON COLORS -->
+                    <StackPanel Grid.Column="4" Spacing="6">
+                        <TextBlock Text="Button colors" Foreground="{StaticResource BrushCustom}" />
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Success" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.SuccessButton, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.SuccessButton}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Primary" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.PrimaryButton, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.PrimaryButton}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Warning" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.WarningButton, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.WarningButton}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Danger" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.DangerButton, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.DangerButton}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Foreground" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.ForegroundButton, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.ForegroundButton}" Width="92" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Background" Width="76" VerticalAlignment="Center" />
+                            <Border Width="18" Height="18" CornerRadius="3" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                    Background="{Binding OBSettings.Themes.BackgroundButton, Converter={x:Static ob:HexToBrushConverter.Instance}}" />
+                            <TextBox Text="{Binding OBSettings.Themes.BackgroundButton}" Width="92" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Background image -->
+                <Grid ColumnDefinitions="Auto,*,Auto,86,14,Auto" VerticalAlignment="Center">
+                    <TextBlock Text="Background image" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <DockPanel Grid.Column="1">
+                        <Button Content="Choose" DockPanel.Dock="Right" Padding="10,3" Click="BackgroundImagePick_Click" />
+                        <TextBox Text="{Binding OBSettings.Themes.BackgroundImage}" />
+                    </DockPanel>
+                    <TextBlock Grid.Column="2" Text="Opacity" VerticalAlignment="Center" Margin="8,0,0,0" />
+                    <NumericUpDown Grid.Column="3" Minimum="0" Maximum="100"
+                                   Value="{Binding OBSettings.Themes.BackgroundImageOpacity, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" />
+                    <CheckBox Grid.Column="5" Content="Use Images" VerticalAlignment="Center"
+                              IsChecked="{Binding OBSettings.Themes.UseImage}" />
+                </Grid>
+                <Image Source="{Binding OBSettings.Themes.BackgroundImage, Converter={x:Static ob:PathToBitmapConverter.Instance}}"
+                       MaxWidth="150" MaxHeight="150" HorizontalAlignment="Left" Margin="0,4,0,0" />
+
+                <Grid ColumnDefinitions="Auto,*,Auto,86">
+                    <TextBlock Text="Background logo" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <DockPanel Grid.Column="1">
+                        <Button Content="Choose" DockPanel.Dock="Right" Padding="10,3" Click="BackgroundLogoPick_Click" />
+                        <TextBox Text="{Binding OBSettings.Themes.BackgroundLogo}" />
+                    </DockPanel>
+                </Grid>
+
+                <Button Content="Reset customization" Classes="Danger" Padding="12,4"
+                        HorizontalAlignment="Left" Command="{Binding ResetCustomizationCommand}" />
+
+                <!-- ADDITIONAL -->
+                <TextBlock Text="Additional" Classes="SectionHeader" Margin="0,8,0,0" />
+                <StackPanel Orientation="Horizontal" Spacing="20">
+                    <CheckBox Content="Allow Transparency [EXTREME CARE]"
+                              IsChecked="{Binding OBSettings.Themes.AllowTransparency}"
+                              ToolTip.Tip="Breaks the HTML viewer and debugger log. Requires restart." />
+                    <CheckBox Content="Enable Snow [RESTART]" IsChecked="{Binding OBSettings.Themes.EnableSnow}" />
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <TextBlock Text="Snow amount" VerticalAlignment="Center" />
+                        <NumericUpDown Value="{Binding OBSettings.Themes.SnowAmount, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}"
+                                       Minimum="1" Maximum="100" Width="92" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ═══ Bottom bar: SAVE | RESET ═══ -->
+        <Grid Grid.Row="3" ColumnDefinitions="5*,*">
+            <Button Grid.Column="0" Classes="Accent" Margin="0,4,4,4" Command="{Binding SaveSettingsCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                    <PathIcon Data="M 17,3 L 5,3 C 3.9,3 3,3.9 3,5 L 3,19 C 3,20.1 3.9,21 5,21 L 19,21 C 20.1,21 21,20.1 21,19 L 21,7 Z M 19,19 L 5,19 L 5,5 L 16.2,5 L 19,7.8 Z M 12,12 C 10.3,12 9,13.3 9,15 C 9,16.7 10.3,18 12,18 C 13.7,18 15,16.7 15,15 C 15,13.3 13.7,12 12,12 Z M 6,6 L 15,6 L 15,10 L 6,10 Z" Width="14" Height="14" />
+                    <TextBlock Text="SAVE" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="1" Margin="4,4,0,4" Command="{Binding ResetSettingsCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                    <PathIcon Data="M 17.65,6.35 C 16.2,4.9 14.21,4 12,4 C 7.58,4 4.01,7.58 4.01,12 C 4.01,16.42 7.58,20 12,20 C 15.73,20 18.84,17.45 19.73,14 L 17.65,14 C 16.83,16.33 14.61,18 12,18 C 8.69,18 6,15.31 6,12 C 6,8.69 8.69,6 12,6 C 13.66,6 15.14,6.69 16.22,7.78 L 13,11 L 20,11 L 20,4 Z" Width="14" Height="14" />
+                    <TextBlock Text="RESET" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

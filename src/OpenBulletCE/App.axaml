@@ -1,0 +1,30 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="OpenBulletCE.App"
+             xmlns:local="clr-namespace:OpenBulletCE"
+             RequestedThemeVariant="Dark">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Themes/Colors.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:TabActiveConverter x:Key="TabActiveConverter" />
+            <local:StackerViewConverter x:Key="StackerViewConverter" />
+            <local:InputTypeConverter x:Key="InputTypeConverter" />
+            <local:IntConverter x:Key="IntConverter" />
+            <local:BoolConverter x:Key="BoolConverter" />
+            <local:EqualConverter x:Key="EqualConverter" />
+            <local:NotNullConverter x:Key="NotNullConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+        <StyleInclude Source="/Themes/Typography.axaml" />
+        <StyleInclude Source="/Themes/Controls.axaml" />
+    </Application.Styles>
+
+</Application>

@@ -1,0 +1,58 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="OpenBulletCE.Views.Dialogs.DialogLSDoc"
+        Title="LoliScript Documentation" Width="800" Height="500"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BrushBackground}">
+
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="12" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Left sidebar -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <ComboBox x:Name="SectionComboBox" Grid.Row="0"
+                      SelectionChanged="Section_Changed" />
+
+            <TextBlock Grid.Row="1" Text="CONTENTS" Classes="Secondary"
+                       FontWeight="Bold" Margin="0,8,0,4" />
+
+            <ScrollViewer Grid.Row="2">
+                <StackPanel x:Name="MenuPanel" />
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Content area -->
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="TitleLabel" Grid.Row="0"
+                       Text="Select a topic" FontSize="18" FontWeight="SemiBold"
+                       Margin="0,0,0,8" />
+
+            <Border Grid.Row="1" Classes="Card" Padding="12">
+                <ScrollViewer>
+                    <SelectableTextBlock x:Name="ContentDisplay"
+                                         FontFamily="Cascadia Code, Consolas, monospace"
+                                         FontSize="12"
+                                         TextWrapping="Wrap" />
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

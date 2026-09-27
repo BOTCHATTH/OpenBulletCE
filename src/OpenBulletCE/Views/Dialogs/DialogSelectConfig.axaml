@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:OpenBulletCE.ViewModels"
+        mc:Ignorable="d"
+        x:Class="OpenBulletCE.Views.Dialogs.DialogSelectConfig"
+        Title="Select Config" Width="700" Height="500"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BrushBackground}">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Search -->
+        <Grid Grid.Row="0" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="FilterTextBox" Grid.Column="0" Watermark="Search configs..."
+                     KeyDown="Filter_KeyDown" />
+        </Grid>
+
+        <!-- Config list -->
+        <Border Grid.Row="1" Classes="Card" Padding="0">
+            <DataGrid x:Name="ConfigsGrid" AutoGenerateColumns="False"
+                      IsReadOnly="True" GridLinesVisibility="Horizontal"
+                      SelectionMode="Single"
+                      DoubleTapped="Grid_DoubleTapped">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Config.Settings.Name}" Width="*" />
+                    <DataGridTextColumn Header="Author" Binding="{Binding Config.Settings.Author}" Width="120" />
+                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="80" />
+                    <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="100" />
+                    <DataGridTextColumn Header="Prox" Binding="{Binding Config.Settings.NeedsProxies}" Width="50" />
+                    <DataGridTextColumn Header="Cap" Binding="{Binding Config.CaptchasNeeded}" Width="50" />
+                    <DataGridTextColumn Header="Sele" Binding="{Binding Config.SeleniumPresent}" Width="50" />
+                    <DataGridTextColumn Header="Modified" Binding="{Binding Config.Settings.LastModified, StringFormat='{}{0:yyyy-MM-dd}'}" Width="100" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8"
+                    HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Classes="Accent" Content="Select" MinWidth="80" Click="Select_Click" />
+            <Button Content="Cancel" MinWidth="80" Click="Cancel_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

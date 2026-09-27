@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="OpenBulletCE.Views.Dialogs.DialogSelectWordlist"
+        Title="Select Wordlist" Width="600" Height="500"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BrushBackground}">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="FilterTextBox" Grid.Column="0" Watermark="Search wordlists..."
+                     KeyDown="Filter_KeyDown" />
+        </Grid>
+
+        <Border Grid.Row="1" Classes="Card" Padding="0">
+            <DataGrid x:Name="WordlistsGrid" AutoGenerateColumns="False"
+                      IsReadOnly="True" GridLinesVisibility="Horizontal"
+                      SelectionMode="Single"
+                      DoubleTapped="Grid_DoubleTapped">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="80" />
+                    <DataGridTextColumn Header="Lines" Binding="{Binding Total}" Width="80" />
+                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="2*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8"
+                    HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Import File" MinWidth="80" Click="Import_Click" />
+            <Button Classes="Accent" Content="Select" MinWidth="80" Click="Select_Click" />
+            <Button Content="Cancel" MinWidth="80" Click="Cancel_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

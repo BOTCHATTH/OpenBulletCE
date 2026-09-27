@@ -1,0 +1,121 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenBulletCE.ViewModels.Pages"
+             xmlns:ob="clr-namespace:OpenBulletCE" mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Pages.ProxyView"
+             x:DataType="vm:ProxyPageViewModel">
+
+    <Design.DataContext>
+        <vm:ProxyPageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="40,40,30,*">
+
+        <!-- Row 0 — OB2: import/export/deletes + stats -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="6">
+            <Button Padding="10,4" Click="AddProxiesDialog_Click" Classes="Success">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M9,16V10H5L12,3L19,10H14V16H9M5,20V18H19V20H5Z" Width="13" Height="13" />
+                    <TextBlock Text="Import" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Padding="10,4" Click="Export_Click">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M9,10V16H5V10H1L6,5L11,10H8V14H9M12,3L19,10H14V16H9V10H12V3M23,15V19H13V17H21V15H23Z" Width="13" Height="13" />
+                    <TextBlock Text="Export" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Padding="10,4" Classes="Danger" Click="DeleteSelected_Click">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="13" Height="13" />
+                    <TextBlock Text="Delete" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Padding="10,4" Classes="Danger" Command="{Binding RemoveNotWorkingCommand}"
+                    ToolTip.Tip="Deletes proxies that failed the check">
+                <TextBlock Text="Delete Not Working" VerticalAlignment="Center" />
+            </Button>
+            <Button Padding="10,4" Classes="Danger" Command="{Binding RemoveUntestedCommand}"
+                    ToolTip.Tip="Deletes proxies that haven't been tested">
+                <TextBlock Text="Delete Untested" VerticalAlignment="Center" />
+            </Button>
+            <Button Padding="10,4">
+                <TextBlock Text="More ▾" VerticalAlignment="Center" />
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuItem Header="Delete Duplicates" Command="{Binding RemoveDuplicatesCommand}" />
+                        <MenuItem Header="Delete All" Command="{Binding ClearAllCommand}" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+
+            <TextBlock Text="Total:" FontWeight="Bold" VerticalAlignment="Center" Margin="8,0,0,0" />
+            <TextBlock Text="{Binding TotalCount}" VerticalAlignment="Center" Margin="3,0,0,0" />
+            <TextBlock Text="Working:" FontWeight="Bold" VerticalAlignment="Center" Margin="6,0,0,0"
+                       Foreground="{StaticResource BrushSuccess}" />
+            <TextBlock Text="{Binding AliveCount}" VerticalAlignment="Center" Margin="3,0,0,0"
+                       Foreground="{StaticResource BrushSuccess}" />
+            <TextBlock Text="Not working:" FontWeight="Bold" VerticalAlignment="Center" Margin="6,0,0,0"
+                       Foreground="{StaticResource BrushError}" />
+            <TextBlock Text="{Binding DeadCount}" VerticalAlignment="Center" Margin="3,0,0,0"
+                       Foreground="{StaticResource BrushError}" />
+            <TextBlock Text="Unchecked:" FontWeight="Bold" VerticalAlignment="Center" Margin="6,0,0,0"
+                       Foreground="{StaticResource BrushTextSecondary}" />
+            <TextBlock Text="{Binding UncheckedCount}" VerticalAlignment="Center" Margin="3,0,0,0"
+                       Foreground="{StaticResource BrushTextSecondary}" />
+        </StackPanel>
+
+        <!-- Row 1 — checker controls -->
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="Progress:" VerticalAlignment="Center" Margin="0,0,6,0" />
+            <ProgressBar Grid.Column="1" Value="{Binding CheckProgress}" Maximum="100"
+                         Height="8" VerticalAlignment="Center" Margin="0,0,10,0" />
+            <TextBlock Grid.Column="2" Text="Bots:" VerticalAlignment="Center" Margin="0,0,4,0" />
+            <NumericUpDown Grid.Column="3" Value="{Binding Manager.BotsAmount, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="1" Maximum="200"
+                           Width="80" Margin="0,0,10,0" />
+            <TextBlock Grid.Column="4" Text="Test On:" VerticalAlignment="Center" Margin="0,0,4,0" />
+            <ComboBox Grid.Column="5" ItemsSource="{Binding TestSiteUrls}"
+                      SelectedItem="{Binding Manager.TestSite}" Width="170" Margin="0,0,6,0" />
+            <CheckBox Grid.Column="6" Content="Only untested" IsChecked="{Binding Manager.OnlyUntested}"
+                      VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- Row 2 — success key + CHECK -->
+        <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="Success Key:" VerticalAlignment="Center" Margin="0,0,6,0" />
+            <ComboBox Grid.Column="1" ItemsSource="{Binding SuccessKeys}"
+                      SelectedItem="{Binding Manager.SuccessKey}" Margin="0,0,8,0"
+                      HorizontalAlignment="Left" MinWidth="200" />
+            <Button Grid.Column="2" Content="CHECK" Classes="Accent" Padding="26,4"
+                    Command="{Binding CheckProxiesCommand}" />
+        </Grid>
+
+        <!-- Proxies grid -->
+        <DataGrid Grid.Row="3" ItemsSource="{Binding Proxies}"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  SelectionMode="Extended" x:Name="ProxiesGrid"
+                  CanUserResizeColumns="True" CanUserSortColumns="True"
+                  Margin="0,6,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="70" />
+                <DataGridTextColumn Header="Host" Binding="{Binding Host}" Width="*" />
+                <DataGridTextColumn Header="Port" Binding="{Binding Port}" Width="60" />
+                <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="100" />
+                <DataGridTextColumn Header="Password" Binding="{Binding Password}" Width="100" />
+                <DataGridTextColumn Header="Country" Binding="{Binding Country}" Width="80" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Working}" Width="80" />
+                <DataGridTextColumn Header="Ping" Binding="{Binding Ping}" Width="70" />
+                <DataGridTextColumn Header="Chain" Binding="{Binding HasNext}" Width="50" />
+                <DataGridTextColumn Header="Last Checked" Binding="{Binding LastChecked, StringFormat='{}{0:HH:mm:ss}'}" Width="100" />
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Copy Selected Proxies" Click="CopyProxies_Click" />
+                    <MenuItem Header="Copy Selected Proxies (with type and credentials)" Click="CopyProxiesFull_Click" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+    </Grid>
+</UserControl>

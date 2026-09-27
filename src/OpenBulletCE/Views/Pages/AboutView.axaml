@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenBulletCE.ViewModels.Pages"
+             mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Pages.AboutView"
+             x:DataType="vm:AboutPageViewModel">
+
+    <Design.DataContext>
+        <vm:AboutPageViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock FontSize="{StaticResource FontSizeLG}" TextWrapping="Wrap"
+                       Foreground="{StaticResource BrushTextPrimary}">
+                <Span FontStyle="Italic">OpenBullet Cookie Edition</Span>
+                <Span> is a webtesting suite that can be used for </Span>
+                <Span FontWeight="Bold">scraping</Span>
+                <Span> and </Span>
+                <Span FontWeight="Bold">parsing</Span>
+                <Span> data, automated </Span>
+                <Span FontWeight="Bold">pentesting</Span>
+                <Span>, selenium </Span>
+                <Span FontWeight="Bold">unit testing</Span>
+                <Span> and much more..</Span>
+                <LineBreak /><LineBreak />
+                <Span Foreground="{StaticResource BrushError}" FontWeight="Bold">IT IS ILLEGAL</Span>
+                <Span Foreground="{StaticResource BrushError}"> to use this program to perform (D)DoS or credential stuffing attacks on sites you don't own!</Span>
+                <LineBreak />
+                <Span Foreground="{StaticResource BrushSuccess}">This software is </Span>
+                <Span Foreground="{StaticResource BrushSuccess}" FontStyle="Italic">Open Source</Span>
+                <Span Foreground="{StaticResource BrushSuccess}"> and licensed under the MIT license. Please visit the </Span>
+                <Span Foreground="{StaticResource BrushSuccess}" FontWeight="Bold">repository</Span>
+                <Span Foreground="{StaticResource BrushSuccess}"> using the button below.</Span>
+            </TextBlock>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Spacing="4" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="Version 1.8.9" Foreground="{StaticResource BrushAccent}" FontWeight="Bold" />
+                <TextBlock Text="·  .NET 8 / Avalonia UI port of the classic WPF Cookie Edition"
+                           Foreground="{StaticResource BrushTextSecondary}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="OC2 MCP server" Foreground="{StaticResource BrushAccent}" FontWeight="Bold" />
+                <TextBlock Text="·  built-in Model Context Protocol endpoint — drive configs, runners and data from AI agents"
+                           Foreground="{StaticResource BrushTextSecondary}" />
+            </StackPanel>
+            <TextBlock Text="Original OpenBullet by Ruri · Cookie Edition fork · Avalonia port &amp; OC2 by the CE.Avalonia project"
+                       Foreground="{StaticResource BrushTextMuted}" FontSize="{StaticResource FontSizeXS}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" Spacing="6">
+            <Button Padding="12,5" Click="Repo_Click">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <PathIcon Data="M 12,2 C 6.48,2 2,6.48 2,12 C 2,16.42 4.87,20.17 8.84,21.5 C 9.34,21.58 9.5,21.27 9.5,21 C 9.5,20.77 9.5,20.14 9.5,19.31 C 6.73,19.91 6.14,17.97 6.14,17.97 C 5.68,16.81 5.03,16.5 5.03,16.5 C 4.12,15.88 5.1,15.9 5.1,15.9 C 6.1,15.97 6.63,16.93 6.63,16.93 C 7.5,18.45 8.97,18 9.54,17.76 C 9.63,17.11 9.89,16.67 10.17,16.42 C 7.95,16.17 5.62,15.31 5.62,11.5 C 5.62,10.39 6,9.5 6.65,8.79 C 6.55,8.54 6.2,7.5 6.75,6.15 C 6.75,6.15 7.59,5.88 9.5,7.17 C 10.29,6.95 11.15,6.84 12,6.84 C 12.85,6.84 13.71,6.95 14.5,7.17 C 16.41,5.88 17.25,6.15 17.25,6.15 C 17.8,7.5 17.45,8.54 17.35,8.79 C 18,9.5 18.38,10.39 18.38,11.5 C 18.38,15.32 16.04,16.16 13.81,16.41 C 14.17,16.72 14.5,17.33 14.5,18.26 C 14.5,19.6 14.5,20.68 14.5,21 C 14.5,21.3 14.66,21.59 15.17,21.5 C 19.14,20.16 22,16.42 22,12 C 22,6.48 17.52,2 12,2 Z" Width="16" Height="16" />
+                    <TextBlock Text="Repository" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Padding="12,5" Click="Docs_Click">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <PathIcon Data="M 21,5 C 19.89,4.65 18.67,4.5 17.5,4.5 C 15.55,4.5 13.45,4.9 12,6 C 10.55,4.9 8.45,4.5 6.5,4.5 C 4.55,4.5 2.45,4.9 1,6 L 1,20.65 C 1,20.9 1.25,21.15 1.5,21.15 C 1.6,21.15 1.65,21.15 1.75,21.15 C 3.1,20.45 5.05,20 6.5,20 C 8.45,20 10.55,20.4 12,21.5 C 13.35,20.65 15.8,20 17.5,20 C 19.15,20 20.85,20.3 22.25,21.05 C 22.35,21.1 22.4,21.1 22.5,21.1 C 22.75,21.1 23,20.85 23,20.6 L 23,6 C 22.4,5.55 21.75,5.25 21,5 Z M 21,18.5 C 19.9,18.15 18.7,18 17.5,18 C 15.8,18 13.35,18.65 12,19.5 L 12,8 C 13.35,7.15 15.8,6.5 17.5,6.5 C 18.7,6.5 19.9,6.65 21,7 Z" Width="16" Height="16" />
+                    <TextBlock Text="Usage Guide" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

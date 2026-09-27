@@ -1,0 +1,41 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Global text defaults — capital-S variants used across views -->
+    <Style Selector="TextBlock.Secondary">
+        <Setter Property="Foreground" Value="{StaticResource BrushTextSecondary}" />
+    </Style>
+    <Style Selector="TextBlock.Tertiary">
+        <Setter Property="Foreground" Value="{StaticResource BrushTextTertiary}" />
+    </Style>
+    <Style Selector="TextBlock.Accent">
+        <Setter Property="Foreground" Value="{StaticResource BrushAccentHover}" />
+    </Style>
+    <Style Selector="TextBlock.Success">
+        <Setter Property="Foreground" Value="{StaticResource BrushSuccess}" />
+    </Style>
+    <Style Selector="TextBlock.Warning">
+        <Setter Property="Foreground" Value="{StaticResource BrushWarning}" />
+    </Style>
+    <Style Selector="TextBlock.Error">
+        <Setter Property="Foreground" Value="{StaticResource BrushError}" />
+    </Style>
+    <Style Selector="TextBlock.Mono">
+        <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+    </Style>
+    <Style Selector="TextBlock.Title">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeXL}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="TextBlock.SectionHeader">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeXS}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextTertiary}" />
+        <Setter Property="LetterSpacing" Value="1.5" />
+    </Style>
+
+    <Style Selector="TextBox.mono, TextBox.Mono">
+        <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+    </Style>
+
+</Styles>

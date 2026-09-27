@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="OpenBulletCE.Views.Dialogs.DialogAddProxies"
+        Title="Add Proxies" Width="500" Height="400"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BrushBackground}">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Paste proxies (one per line):" Classes="Secondary" Margin="0,0,0,8" />
+
+        <Grid Grid.Row="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Type:" VerticalAlignment="Center" Classes="Secondary" />
+            <ComboBox x:Name="TypeComboBox" Grid.Column="1" Margin="8,0" SelectedIndex="0">
+                <ComboBoxItem Content="HTTP" />
+                <ComboBoxItem Content="SOCKS4" />
+                <ComboBoxItem Content="SOCKS5" />
+            </ComboBox>
+            <Button Grid.Column="2" Content="Import File" Click="ImportFile_Click" />
+        </Grid>
+
+        <Border Grid.Row="2" Classes="Card" Padding="0">
+            <TextBox x:Name="ProxiesTextBox" AcceptsReturn="True"
+                     Watermark="ip:port&#x0a;ip:port:user:pass&#x0a;..."
+                     TextWrapping="NoWrap" />
+        </Border>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="8"
+                    HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Classes="Accent" Content="Add" MinWidth="80" Click="Accept_Click" />
+            <Button Content="Cancel" MinWidth="80" Click="Cancel_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

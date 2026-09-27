@@ -1,0 +1,95 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="OpenBulletCE.Views.Dialogs.DialogUsageGuide"
+        Title="Usage Guide" Width="640" Height="560"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BrushBackground}">
+
+    <Grid Margin="16" RowDefinitions="Auto,*,Auto">
+        <TextBlock Grid.Row="0" Text="USAGE GUIDE" FontSize="{StaticResource FontSizeLG}"
+                   FontWeight="Bold" Foreground="{StaticResource BrushAccent}" Margin="0,0,0,10" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="14" TextElement.FontSize="{StaticResource FontSizeSM}"
+                        TextElement.Foreground="{StaticResource BrushTextPrimary}">
+
+                <Border Classes="Card" Padding="12">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="1 · QUICK START" FontWeight="Bold" Foreground="{StaticResource BrushAccent}" />
+                        <TextBlock TextWrapping="Wrap">Configs — pick or import a .lce config. Set Bots on Other Options if the config suggests it.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Wordlists — import user:pass lists (Default configs). Cookies — import a folder of Netscape cookie .txt files (CookieEdition configs).</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Proxies — optional. Import, Check to test them, set the reload source in Settings.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Runner — open a runner, Select Config + Select List, set Bots / Skip / proxy mode, press START.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Hits DB — every SUCCESS / CUSTOM / TOCHECK result lands here with its captured data and full log.</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="Card" Padding="12">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="2 · COOKIE EDITION FLOW" FontWeight="Bold" Foreground="{StaticResource BrushCustom}" />
+                        <TextBlock TextWrapping="Wrap">CookieEdition configs take a Cookie list, not a wordlist — each line is a path to a Netscape-format cookie file.</TextBlock>
+                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource FontMono}">COOKIECONTAINER "site.com" "&lt;COOKIEPATH&gt;" -&gt; SAVE "ck"</TextBlock>
+                        <TextBlock TextWrapping="Wrap">The first literal is the domain filter, the second the file path. The block sets the WRONGPATH variable when the file can't be read — gate the config on it.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Cookies are stored as "name: value" lines; send them via HEADER "cookie: &lt;ck&gt;".</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="Card" Padding="12">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="3 · RUNNER" FontWeight="Bold" Foreground="{StaticResource BrushAccent}" />
+                        <TextBlock TextWrapping="Wrap">Bots — parallel workers (1-200). Skip — resume offset; the runner saves progress and auto-resumes.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Proxy — DEF uses the config's setting, ON forces proxies, OFF runs bare.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Hits panel — filter Hits / Custom / ToCheck. Right-click a hit: copy data, copy with capture, select all, save to file, send to debugger, view last response or full log.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">The console log is color-coded: green SUCCESS, red FAIL, orange CUSTOM, yellow RETRY/BAN, aqua TOCHECK, blue bot lifecycle.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">OPTIONS — job options: delayed start, max CPM, hit limits.</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="Card" Padding="12">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="4 · STACKER (DEBUGGER)" FontWeight="Bold" Foreground="{StaticResource BrushAccent}" />
+                        <TextBlock TextWrapping="Wrap">Configs → Stacker — load a config, set test data + optional proxy, then run step-by-step (SBS) or full.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">The log accumulates per block — nothing is wiped between steps. The Variables tab shows every variable; captures render in tomato.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Add blocks from the catalog or write LoliScript directly in the script view.</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="Card" Padding="12">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="5 · LOLISCRIPT BASICS" FontWeight="Bold" Foreground="{StaticResource BrushAccent}" />
+                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource FontMono}">REQUEST GET "url" / PARSE "&lt;SOURCE&gt;" LR "l" "r" -&gt; CAP "x"</TextBlock>
+                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource FontMono}">KEYCHECK · KEYCHAIN SUCCESS/FAIL/RETRY OR · KEY "..." Contains "..."</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Blocks are uppercase keywords; child lines (headers, keychains) indent with a space. ## comments · ! disables a line · #name is a JUMP label.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">-&gt; VAR stores a variable, -&gt; CAP marks it as a capture (shown on hits). &lt;NAME&gt; interpolates a variable inside literals.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">BEGIN SCRIPT JavaScript .. END SCRIPT -&gt; VARS "a,b" runs embedded JS via Jint.</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="Card" Padding="12">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="6 · OC2 — MCP SERVER" FontWeight="Bold" Foreground="{StaticResource BrushAccent}" />
+                        <TextBlock TextWrapping="Wrap">The app hosts a Model Context Protocol server at http://localhost:5116/mcp (port in Settings → MCP).</TextBlock>
+                        <TextBlock TextWrapping="Wrap">MCP page → Install writes the oc2 server into your agent's config (Devin CLI, Claude Code, Windsurf, Cursor). Agents get 60+ tools: author/debug configs, control runners, manage wordlists/cookies/proxies.</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="Card" Padding="12">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="7 · TIPS" FontWeight="Bold" Foreground="{StaticResource BrushAccent}" />
+                        <TextBlock TextWrapping="Wrap">Settings persist automatically — theme, MCP port, runner options.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Plugins — drop a block-plugin .dll into Plugins/ and restart; inbuilt plugins can't be removed.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Hits are also auto-saved under Hits/ — the DB view is the searchable index.</TextBlock>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8"
+                    HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Close" MinWidth="80" Click="Close_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

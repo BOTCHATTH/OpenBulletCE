@@ -1,0 +1,258 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:OpenBulletCE.Views.Controls"
+             xmlns:ob="clr-namespace:OpenBulletCE"
+             xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+             mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Controls.StackerView">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══ LEFT — LoliScript editor / Stack view ═══ -->
+        <Grid Grid.Column="0">
+
+            <!-- LoliScript mode: header + editor + bottom buttons -->
+            <Grid x:Name="LoliScriptPanel">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="LoliScript Code" FontWeight="Bold"
+                           Foreground="{StaticResource BrushInfo}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                <ae:TextEditor Grid.Row="1" x:Name="LoliScriptEditor"
+                               ShowLineNumbers="True"
+                               FontFamily="{StaticResource FontMono}" FontSize="{StaticResource FontSizeSM}"
+                               Background="{StaticResource BrushSurfaceAlt}" Foreground="{StaticResource BrushTextPrimary}"
+                               BorderBrush="{StaticResource BrushBorder}" BorderThickness="1" />
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Click="SwitchToStack_Click" HorizontalAlignment="Stretch" Margin="0,4,2,0">
+                        <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                            <PathIcon Data="M4,2A2,2 0 0,0 2,4V16H4V4H16V2H4M8,6A2,2 0 0,0 6,8V20A2,2 0 0,0 8,22H20A2,2 0 0,0 22,20V8A2,2 0 0,0 20,6H8M8,8H20V20H8V8Z" Width="15" Height="15" />
+                            <TextBlock Text="SWITCH TO STACK VIEW" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Column="1" Click="OpenDoc_Click" HorizontalAlignment="Stretch" Margin="2,4,0,0">
+                        <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                            <PathIcon Data="M18,22A2,2 0 0,0 20,20V4C20,2.89 19.1,2 18,2H12V9L9.5,7.5L7,9V2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18Z" Width="15" Height="15" />
+                            <TextBlock Text="Documentation" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <!-- Stack mode: headers + label/toolbar + block list + block info + bottom button -->
+            <Grid x:Name="StackPanel" IsVisible="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Current Stack" FontWeight="Bold"
+                           Foreground="{StaticResource BrushInfo}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Block Info" FontWeight="Bold"
+                           Foreground="{StaticResource BrushSuccess}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                <!-- Icon toolbar -->
+                <Grid Grid.Row="1" Grid.Column="0" Margin="5,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" /><ColumnDefinition Width="*" /><ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" /><ColumnDefinition Width="*" /><ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Classes="StackerTool" Click="AddBlock_Click" ToolTip.Tip="Add a new block">
+                        <PathIcon Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Width="15" Height="15" />
+                    </Button>
+                    <Button Grid.Column="1" Classes="StackerTool" Click="RemoveBlock_Click" ToolTip.Tip="Remove the selected block(s)">
+                        <PathIcon Data="M19,13H5V11H19V13Z" Width="15" Height="15" />
+                    </Button>
+                    <Button Grid.Column="2" Classes="StackerTool" Click="ToggleBlock_Click" ToolTip.Tip="Disable / Enable the selected block(s)">
+                        <PathIcon Data="M17,7H7A5,5 0 0,0 7,17H17A5,5 0 0,0 17,7M7,15A3,3 0 0,1 7,9A3,3 0 0,1 7,15M17,15H12V9H17A3,3 0 0,1 17,15Z" Width="15" Height="15" />
+                    </Button>
+                    <Button Grid.Column="3" Classes="StackerTool" Click="CloneBlock_Click" ToolTip.Tip="Clone the selected block(s)">
+                        <PathIcon Data="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" Width="15" Height="15" />
+                    </Button>
+                    <Button Grid.Column="4" Classes="StackerTool" Click="MoveUp_Click" ToolTip.Tip="Move the selected block(s) up">
+                        <PathIcon Data="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" Width="15" Height="15" />
+                    </Button>
+                    <Button Grid.Column="5" Classes="StackerTool" Click="MoveDown_Click" ToolTip.Tip="Move the selected block(s) down">
+                        <PathIcon Data="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" Width="15" Height="15" />
+                    </Button>
+                    <Button Grid.Column="6" Classes="StackerTool" Click="Save_Click" ToolTip.Tip="Save the config">
+                        <PathIcon Data="M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3M19,19H5V5H16.17L19,7.83V19M12,12A3,3 0 0,0 9,15A3,3 0 0,0 12,18A3,3 0 0,0 15,15A3,3 0 0,0 12,12M6,6H15V10H6V6Z" Width="15" Height="15" />
+                    </Button>
+                </Grid>
+
+                <!-- Label -->
+                <DockPanel Grid.Row="1" Grid.Column="1" Margin="5,0">
+                    <TextBlock Text="Label:" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBox x:Name="BlockLabelBox" IsEnabled="False" MinHeight="24" Padding="6,2"
+                             TextChanged="BlockLabel_TextChanged" />
+                </DockPanel>
+
+                <!-- Block list — original tight colored rows -->
+                <ScrollViewer Grid.Row="2" Grid.Column="0" Margin="0,4,0,0">
+                    <ListBox x:Name="BlockListBox" SelectionMode="Multiple"
+                             ItemsSource="{Binding Stack}"
+                             BorderThickness="0" Background="Transparent" Padding="0"
+                             SelectionChanged="BlockList_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding Color}"
+                                        BorderBrush="{Binding BorderColor}"
+                                        BorderThickness="2"
+                                        Height="{Binding Height}">
+                                    <TextBlock Text="{Binding Block.Label}"
+                                               FontSize="{Binding FontSize}"
+                                               FontWeight="SemiBold"
+                                               Foreground="{Binding Foreground}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="MinHeight" Value="0" />
+                            </Style>
+                            <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                                <Setter Property="Background" Value="Transparent" />
+                            </Style>
+                        </ListBox.Styles>
+                    </ListBox>
+                </ScrollViewer>
+
+                <!-- Block info -->
+                <ScrollViewer Grid.Row="2" Grid.Column="1" Margin="10,4,0,0">
+                    <ContentControl x:Name="BlockEditorHost" />
+                </ScrollViewer>
+
+                <Button Grid.Row="3" Grid.Column="0" Click="SwitchToLoliScript_Click" HorizontalAlignment="Stretch" Margin="0,4,0,0">
+                    <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                        <PathIcon Data="M8,3A2,2 0 0,0 6,5V9A2,2 0 0,1 4,11H3V13H4A2,2 0 0,1 6,15V19A2,2 0 0,0 8,21H10V19H8V14A2,2 0 0,0 6,12A2,2 0 0,0 8,10V5H10V3M16,3A2,2 0 0,1 18,5V9A2,2 0 0,0 20,11H21V13H20A2,2 0 0,0 18,15V19A2,2 0 0,1 16,21H14V19H16V14A2,2 0 0,1 18,12A2,2 0 0,1 16,10V5H14V3H16Z" Width="15" Height="15" />
+                        <TextBlock Text="SWITCH TO LOLISCRIPT" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
+
+        <!-- ═══ RIGHT — Debugger ═══ -->
+        <Border Grid.Column="1" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1,0,0,0" Margin="8,0,0,0">
+            <Grid Margin="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Debugger" FontWeight="Bold"
+                           Foreground="{StaticResource BrushCustom}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                <DockPanel Grid.Row="1" Margin="0,0,0,5">
+                    <Button DockPanel.Dock="Left" Content="Start" Click="StartDebugger_Click" ToolTip.Tip="Start the Debugger" Padding="10,2" />
+                    <CheckBox DockPanel.Dock="Left" x:Name="SBSCheck" Content="SBS" VerticalAlignment="Center" Margin="6,0" ToolTip.Tip="Step By Step" />
+                    <Button DockPanel.Dock="Left" x:Name="NextStepButton" Content="Step" Click="NextStep_Click" Padding="10,2" Margin="0,0,8,0" ToolTip.Tip="Take another Step" />
+                    <TextBlock DockPanel.Dock="Left" Text="Data:" VerticalAlignment="Center" Margin="0,0,4,0" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="TestDataBox" MinHeight="24" Padding="6,2" />
+                        <ComboBox Grid.Column="1" x:Name="DataTypeCombo" MinHeight="24" Padding="6,2" MinWidth="80" />
+                    </Grid>
+                </DockPanel>
+
+                <DockPanel Grid.Row="2">
+                    <TextBlock DockPanel.Dock="Left" Text="Proxy:" VerticalAlignment="Center" Margin="0,0,4,0" />
+                    <CheckBox DockPanel.Dock="Left" x:Name="UseProxyCheck" VerticalAlignment="Center" Margin="0,0,4,0" ToolTip.Tip="Enable/Disable the Proxy" />
+                    <ComboBox DockPanel.Dock="Right" x:Name="ProxyTypeCombo" Width="82" MinHeight="24" Padding="6,2" SelectedIndex="0"
+                              SelectionChanged="ProxyTypeCombo_SelectionChanged">
+                        <ComboBoxItem Content="Http" />
+                        <ComboBoxItem Content="Socks4" />
+                        <ComboBoxItem Content="Socks4a" />
+                        <ComboBoxItem Content="Socks5" />
+                        <ComboBoxItem Content="Chain" />
+                    </ComboBox>
+                    <TextBox x:Name="TestProxyBox" MinHeight="24" Padding="6,2">
+                        <ToolTip.Tip>
+                            <TextBlock Text="In order to use Auth or Chain, start the line with the proxy type between round brackets.&#x0a;Auth:&#x0a;(http)127.0.0.1:8888:username:password&#x0a;Chain:&#x0a;(socks4)127.0.0.1:8000-&gt;(http)127.0.0.1:8888" />
+                        </ToolTip.Tip>
+                    </TextBox>
+                </DockPanel>
+
+                <TabControl Grid.Row="3">
+                    <TabItem Header="Data">
+                        <ListBox x:Name="DataOutput" FontFamily="{StaticResource FontMono}"
+                                 FontSize="{StaticResource FontSizeXS}"
+                                 Background="{StaticResource BrushSurfaceAlt}" BorderThickness="0"
+                                 Padding="6">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <SelectableTextBlock Text="{Binding LogString}"
+                                                         Foreground="{Binding LogColor, Converter={x:Static ob:LogColorConverter.Instance}}"
+                                                         TextWrapping="Wrap" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Copy All" Click="CopyData_Click" />
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                        </ListBox>
+                    </TabItem>
+                    <TabItem Header="Log">
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Top" x:Name="LogSearch" Margin="4"
+                                     Watermark="Search log..." BorderThickness="1" MinHeight="26"
+                                     TextChanged="LogSearch_TextChanged" />
+                            <ListBox x:Name="LogOutput" FontFamily="{StaticResource FontMono}"
+                                     FontSize="{StaticResource FontSizeXS}"
+                                     Background="{StaticResource BrushSurfaceAlt}" BorderThickness="0"
+                                     Padding="6">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <SelectableTextBlock Text="{Binding LogString}"
+                                                         Foreground="{Binding LogColor, Converter={x:Static ob:LogColorConverter.Instance}}"
+                                                         TextWrapping="Wrap" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Copy All" Click="CopyLog_Click" />
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                            </ListBox>
+                        </DockPanel>
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

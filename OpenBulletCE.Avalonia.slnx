@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OpenBulletCE/OpenBulletCE.csproj" />
+    <Project Path="src/PluginFramework/PluginFramework.csproj" />
+    <Project Path="src/RuriLib/RuriLib.csproj" />
+  </Folder>
+</Solution>

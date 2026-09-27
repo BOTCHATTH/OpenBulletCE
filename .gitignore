@@ -1,0 +1,29 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+.vscode/
+
+# Runtime / user data — never ship personal data
+Settings/
+Cookies/
+Hits/
+DB/
+Wordlists/
+Configs/
+Logs/
+Log.txt
+*.db
+nul
+NUL
+
+# OS junk
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Publish artifacts
+*.zip
+publish/

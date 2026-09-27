@@ -1,0 +1,151 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenBulletCE"
+        xmlns:vm="clr-namespace:OpenBulletCE.ViewModels"
+        xmlns:conv="clr-namespace:Avalonia.Data.Converters;assembly=Avalonia.Base"
+        mc:Ignorable="d"
+        x:Class="OpenBulletCE.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="OpenBullet CE"
+        Width="900" Height="640"
+        MinWidth="870" MinHeight="600"
+        Background="{StaticResource BrushBackground}"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="30">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Grid x:Name="RootGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- ═══ Title Bar ═══ -->
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Background="{StaticResource BrushSidebarBg}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- App icon + title -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0,0,0" Spacing="6">
+                <Image Width="20" Height="20" Source="avares://OpenBulletCE/Assets/obicon.png" />
+                <TextBlock Text="Open Bullet" FontSize="{StaticResource FontSizeLG}" FontWeight="Bold"
+                           Foreground="{StaticResource BrushTextPrimary}" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Drag area -->
+            <Border Grid.Column="1" Background="Transparent" Name="TitleBarDrag"
+                    PointerPressed="TitleBarDrag_PointerPressed" />
+
+            <!-- Window buttons -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="0" VerticalAlignment="Stretch">
+                <Button Name="MinimizeBtn" Classes="Ghost" Padding="12,0" MinWidth="38"
+                        Click="MinimizeBtn_Click" ToolTip.Tip="Minimize">
+                    <PathIcon Data="M20,14H4V12H20V14Z" Width="11" Height="11" Foreground="{StaticResource BrushTextSecondary}" />
+                </Button>
+                <Button Name="MaximizeBtn" Classes="Ghost" Padding="12,0" MinWidth="38"
+                        Click="MaximizeBtn_Click" ToolTip.Tip="Maximize">
+                    <PathIcon Data="M4,4H20V20H4V4M6,8V18H18V8H6Z" Width="11" Height="11"
+                              Foreground="{StaticResource BrushTextSecondary}" />
+                </Button>
+                <Button Name="CloseBtn" Classes="Ghost" Padding="12,0" MinWidth="38"
+                        Click="CloseBtn_Click" ToolTip.Tip="Quit">
+                    <PathIcon Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" Width="11" Height="11"
+                              Foreground="{StaticResource BrushError}" />
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- ═══ Top Menu — horizontal text tabs ═══ -->
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="Home"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=Home}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Home" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="Runner"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=Runner}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Runner" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="Proxies"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=Proxies}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Proxies" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="Wordlists"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=Wordlists}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Wordlists" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="Cookies"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=Cookies}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Cookies" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="Configs"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=Configs}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Configs" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="Hits DB"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=HitsDB}"
+                             Command="{Binding NavigateCommand}" CommandParameter="HitsDB" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="Tools"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=Tools}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Tools" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="Plugins"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=Plugins}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Plugins" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="MCP"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=MCP}"
+                             Command="{Binding NavigateCommand}" CommandParameter="MCP" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="Settings"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=Settings}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Settings" />
+                <RadioButton Classes="NavItem" GroupName="Nav" Content="About"
+                             IsChecked="{Binding CurrentPageName, Mode=OneWay, Converter={StaticResource EqualConverter}, ConverterParameter=About}"
+                             Command="{Binding NavigateCommand}" CommandParameter="About" />
+            </StackPanel>
+
+            <!-- Log + screenshot icons -->
+            <Button Grid.Column="1" Classes="Ghost" Padding="6,2" Click="ShowLog_Click" ToolTip.Tip="Open the Log">
+                <PathIcon Data="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"
+                          Width="16" Height="16" Foreground="{StaticResource BrushTextSecondary}" />
+            </Button>
+            <Button Grid.Column="2" Classes="Ghost" Padding="6,2" Margin="4,0,0,0"
+                    Click="Screenshot_Click" ToolTip.Tip="Take a Screenshot">
+                <PathIcon Data="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z"
+                          Width="16" Height="16" Foreground="{StaticResource BrushTextSecondary}" />
+            </Button>
+        </Grid>
+
+        <!-- ═══ Content ═══ -->
+        <Border Grid.Row="2" Grid.Column="1" Background="{StaticResource BrushBackground}">
+            <Grid>
+                <Image x:Name="ThemeBackgroundImage" Stretch="UniformToFill" IsHitTestVisible="False" />
+                <Border x:Name="ThemeScrim" Background="#260B0E14" IsHitTestVisible="False"
+                        IsVisible="False" />
+                <Image x:Name="ThemeLogoImage" Stretch="Uniform" IsHitTestVisible="False"
+                       MaxWidth="420" MaxHeight="420"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <ContentControl Content="{Binding CurrentPage}">
+                    <ContentControl.DataTemplates>
+                        <local:ViewLocator />
+                    </ContentControl.DataTemplates>
+                </ContentControl>
+            </Grid>
+        </Border>
+
+    </Grid>
+</Window>

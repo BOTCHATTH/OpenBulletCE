@@ -1,0 +1,450 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenBulletCE.ViewModels.Pages"
+             xmlns:controls="clr-namespace:OpenBulletCE.Views.Controls"
+             xmlns:ob="clr-namespace:OpenBulletCE" mc:Ignorable="d"
+             x:Class="OpenBulletCE.Views.Pages.ConfigView"
+             x:DataType="vm:ConfigPageViewModel">
+
+    <Design.DataContext>
+        <vm:ConfigPageViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Sub-menu -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <RadioButton Classes="SubNavItem" GroupName="CfgNav" Content="Manager"
+                             Command="{Binding SwitchToManagerCommand}"
+                             IsChecked="{Binding IsManagerActive, Mode=OneWay}" />
+                <RadioButton Classes="SubNavItem" GroupName="CfgNav" Content="Stacker"
+                             Command="{Binding SwitchToStackerCommand}"
+                             IsChecked="{Binding IsStackerActive, Mode=OneWay}" />
+                <RadioButton Classes="SubNavItem" GroupName="CfgNav" Content="Other Options"
+                             Command="{Binding SwitchToOtherOptionsCommand}"
+                             IsChecked="{Binding IsOtherOptionsActive, Mode=OneWay}" />
+            </StackPanel>
+            <TextBlock Grid.Column="1" Text="{Binding TotalLabel}"
+                       Classes="Secondary" VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- Content -->
+        <ContentControl Grid.Row="1" Content="{Binding ActiveContent}">
+            <ContentControl.DataTemplates>
+                <DataTemplate DataType="{x:Type vm:ConfigManagerContent}">
+                    <!-- Original layout: header + toolbar + full-width list + bottom info grid -->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="80" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="Current Config: " FontWeight="Bold" />
+                                <TextBlock Text="{Binding $parent[UserControl].DataContext.CurrentConfigName}"
+                                           FontWeight="Bold" Foreground="{StaticResource BrushCustom}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="Total Configs: " FontWeight="Bold" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding $parent[UserControl].DataContext.Total}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button Click="NewConfig_Click" Padding="8,4" Margin="0,0,4,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Width="14" Height="14" Foreground="{StaticResource BrushSuccess}" />
+                                        <TextBlock Text="New" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Click="EditConfig_Click" Padding="8,4" Margin="0,0,4,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" Width="14" Height="14" />
+                                        <TextBlock Text="Edit" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Click="SaveConfig_Click" Padding="8,4" Margin="0,0,4,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3M19,19H5V5H16.17L19,7.83V19M12,12A3,3 0 0,0 9,15A3,3 0 0,0 12,18A3,3 0 0,0 15,15A3,3 0 0,0 12,12M6,6H15V10H6V6Z" Width="14" Height="14" />
+                                        <TextBlock Text="Save" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Click="DeleteConfigs_Click" Padding="8,4">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="14" Height="14" Foreground="{StaticResource BrushError}" />
+                                        <TextBlock Text="Delete" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBox x:Name="ConfigFilterBox" Width="150" Watermark="Filter..." Margin="0,0,4,0" KeyDown="ConfigFilter_KeyDown" Loaded="ConfigFilter_Loaded" />
+                                <Button Padding="8,4" Click="SearchConfigs_Click">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" Width="14" Height="14" />
+                                        <TextBlock Text="Search" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button Padding="8,4" Margin="0,0,4,0" Click="OpenConfigFolder_Click"
+                                        ToolTip.Tip="Open the root folder where Configs are stored">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z" Width="14" Height="14" />
+                                        <TextBlock Text="Open Folder" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Padding="8,4" Command="{Binding $parent[UserControl].DataContext.RescanCommand}"
+                                        ToolTip.Tip="Scan the Config folder again and update the list">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <PathIcon Data="M17.65,6.35C16.2,4.9 14.21,4 12,4C7.58,4 4.01,7.58 4.01,12C4.01,16.42 7.58,20 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18C8.69,18 6,15.31 6,12C6,8.69 8.69,6 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" Width="14" Height="14" />
+                                        <TextBlock Text="Rescan" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+
+                        <DataGrid Grid.Row="2" x:Name="ConfigsGrid" Loaded="ConfigsGrid_Loaded"
+                                  ItemsSource="{Binding $parent[UserControl].DataContext.Configs}"
+                                  SelectedItem="{Binding $parent[UserControl].DataContext.SelectedConfig}"
+                                  SelectionMode="Extended" IsReadOnly="True"
+                                  AutoGenerateColumns="False" CanUserSortColumns="True" CanUserResizeColumns="True"
+                                  DoubleTapped="ConfigsGrid_DoubleTapped"
+                                  SelectionChanged="ConfigsGrid_SelectionChanged">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Config.Settings.Name}" Width="*" />
+                                <DataGridTextColumn Header="Author" Binding="{Binding Config.Settings.Author}" Width="*" />
+                                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="120" />
+                                <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="120" />
+                                <DataGridTextColumn Header="Proxies" Binding="{Binding Config.Settings.NeedsProxies}" Width="90" />
+                                <DataGridTextColumn Header="Captchas" Binding="{Binding Config.CaptchasNeeded}" Width="90" />
+                                <DataGridTextColumn Header="Selenium" Binding="{Binding Config.SeleniumPresent}" Width="90" />
+                                <DataGridTextColumn Header="CF" Binding="{Binding Config.HasCFBypass}" Width="60" />
+                                <DataGridTextColumn Header="Last Modified" Binding="{Binding Config.Settings.LastModified, StringFormat='{}{0:g}'}" Width="140" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Bottom info grid (selected config) -->
+                        <Grid Grid.Row="3" DataContext="{Binding $parent[UserControl].DataContext.HoveredConfig}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
+                                <TextBlock Text="Allowed Wordlists: " />
+                                <TextBlock Text="{Binding AllowedWordlists}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
+                                <TextBlock Text="Blocks Amount: " />
+                                <TextBlock Text="{Binding BlocksAmount}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal">
+                                <TextBlock Text="Additional Info: " />
+                                <TextBlock Text="{Binding Settings.AdditionalInfo}" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+                                <TextBlock Text="Last Modified: " />
+                                <TextBlock Text="{Binding LastModifiedString}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                                <TextBlock Text="Suggested Bots: " />
+                                <TextBlock Text="{Binding Settings.SuggestedBots}" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
+                                <TextBlock Text="Built with version: " />
+                                <TextBlock Text="{Binding Settings.Version}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal">
+                                <TextBlock Text="Author: " Foreground="{StaticResource BrushWarning}" />
+                                <TextBlock Text="{Binding Settings.Author}" Foreground="{StaticResource BrushWarning}" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:StackerContent}">
+                    <controls:StackerView DataContext="{Binding StackerVM}" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:OtherOptionsContent}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Sub-nav: General | Requests | Proxies | Input | Data | Selenium -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="14" Margin="8,0">
+                            <RadioButton Classes="SubNavItem" GroupName="OoNav" Content="General"
+                                         IsChecked="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=0, Mode=OneWay}"
+                                         Click="OoTab_Click" Tag="0" />
+                            <RadioButton Classes="SubNavItem" GroupName="OoNav" Content="Requests"
+                                         IsChecked="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=1, Mode=OneWay}"
+                                         Click="OoTab_Click" Tag="1" />
+                            <RadioButton Classes="SubNavItem" GroupName="OoNav" Content="Proxies"
+                                         IsChecked="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=2, Mode=OneWay}"
+                                         Click="OoTab_Click" Tag="2" />
+                            <RadioButton Classes="SubNavItem" GroupName="OoNav" Content="Input"
+                                         IsChecked="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=3, Mode=OneWay}"
+                                         Click="OoTab_Click" Tag="3" />
+                            <RadioButton Classes="SubNavItem" GroupName="OoNav" Content="Data"
+                                         IsChecked="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=4, Mode=OneWay}"
+                                         Click="OoTab_Click" Tag="4" />
+                            <RadioButton Classes="SubNavItem" GroupName="OoNav" Content="Selenium"
+                                         IsChecked="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=5, Mode=OneWay}"
+                                         Click="OoTab_Click" Tag="5" />
+                        </StackPanel>
+
+                        <!-- ═══ GENERAL ═══ -->
+                        <ScrollViewer Grid.Row="1" IsVisible="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=0}">
+                            <StackPanel Margin="12" Spacing="10" MaxWidth="560" HorizontalAlignment="Left">
+                                <Border Classes="Card" Padding="12,10">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="IDENTITY" Classes="SectionHeader" />
+                                        <DockPanel>
+                                            <TextBlock Text="Name" DockPanel.Dock="Left" MinWidth="160" VerticalAlignment="Center" />
+                                            <TextBox Text="{Binding ConfigSettings.Name}" />
+                                        </DockPanel>
+                                        <DockPanel>
+                                            <TextBlock Text="Author" DockPanel.Dock="Left" MinWidth="160" VerticalAlignment="Center" />
+                                            <TextBox Text="{Binding ConfigSettings.Author}" />
+                                        </DockPanel>
+                                        <Grid ColumnDefinitions="160,*">
+                                            <TextBlock Grid.Column="0" Text="Image" VerticalAlignment="Top" Margin="0,6,0,0" />
+                                            <StackPanel Grid.Column="1" Spacing="6">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <Border Width="64" Height="64" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1"
+                                                            CornerRadius="4" ClipToBounds="True">
+                                                        <Image Source="{Binding ConfigImage}" Stretch="Uniform" />
+                                                    </Border>
+                                                    <StackPanel Spacing="4" VerticalAlignment="Center">
+                                                        <Button Content="Load Image" Click="OoLoadImage_Click" Padding="10,4" />
+                                                        <Button Content="Clear" Click="OoClearImage_Click" Padding="10,4"
+                                                                IsVisible="{Binding ConfigImage, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <DockPanel>
+                                                    <Button DockPanel.Dock="Right" Content="Load" Click="OoLoadImagePath_Click"
+                                                            Padding="10,4" Margin="4,0,0,0" />
+                                                    <TextBox Text="{Binding ImagePath}" Watermark="or paste image path / URL..." />
+                                                </DockPanel>
+                                            </StackPanel>
+                                        </Grid>
+                                        <DockPanel>
+                                            <TextBlock Text="Additional Information" DockPanel.Dock="Left" MinWidth="160" VerticalAlignment="Center" />
+                                            <TextBox Text="{Binding ConfigSettings.AdditionalInfo}" />
+                                        </DockPanel>
+                                    </StackPanel>
+                                </Border>
+                                <Border Classes="Card" Padding="12,10">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="EXECUTION" Classes="SectionHeader" />
+                                        <DockPanel>
+                                            <TextBlock Text="Suggested Bots" DockPanel.Dock="Left" MinWidth="160" VerticalAlignment="Center" />
+                                            <NumericUpDown Value="{Binding ConfigSettings.SuggestedBots, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="1" Maximum="1000" Width="120" HorizontalAlignment="Left" />
+                                        </DockPanel>
+                                        <DockPanel>
+                                            <TextBlock Text="Maximum CPM to avoid overloading the website (0 = infinite)" DockPanel.Dock="Left" MinWidth="160" VerticalAlignment="Center" />
+                                            <NumericUpDown Value="{Binding ConfigSettings.MaxCPM, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="0" Maximum="100000" Width="120" HorizontalAlignment="Left" />
+                                        </DockPanel>
+                                        <CheckBox Content="Save empty captures" IsChecked="{Binding ConfigSettings.SaveEmptyCaptures}" />
+                                        <CheckBox Content="Continue after Custom Status" IsChecked="{Binding ConfigSettings.ContinueOnCustom}" />
+                                        <CheckBox Content="Save hits to a text file instead of DB (the output can be found in the Hits/ConfigName folder)" IsChecked="{Binding ConfigSettings.SaveHitsToTextFile}" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!-- ═══ REQUESTS ═══ -->
+                        <ScrollViewer Grid.Row="1" IsVisible="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=1}">
+                            <StackPanel Margin="12" Spacing="10" MaxWidth="560" HorizontalAlignment="Left">
+                                <Border Classes="Card" Padding="12,10">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="REQUEST HANDLING" Classes="SectionHeader" />
+                                        <CheckBox Content="Ignore Response Errors" IsChecked="{Binding ConfigSettings.IgnoreResponseErrors}" />
+                                        <DockPanel>
+                                            <TextBlock Text="Maximum Redirects" DockPanel.Dock="Left" MinWidth="160" VerticalAlignment="Center" />
+                                            <NumericUpDown Value="{Binding ConfigSettings.MaxRedirects, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="0" Maximum="50" Width="120" HorizontalAlignment="Left" />
+                                        </DockPanel>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!-- ═══ PROXIES ═══ -->
+                        <ScrollViewer Grid.Row="1" IsVisible="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=2}">
+                            <StackPanel Margin="12" Spacing="10" MaxWidth="560" HorizontalAlignment="Left">
+                                <Border Classes="Card" Padding="12,10">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="PROXY RULES" Classes="SectionHeader" />
+                                        <CheckBox Content="Needs Proxies" IsChecked="{Binding ConfigSettings.NeedsProxies}" />
+                                        <CheckBox Content="Use Only Socks Proxies" IsChecked="{Binding ConfigSettings.OnlySocks}" />
+                                        <CheckBox Content="Use Only SSL Proxies" IsChecked="{Binding ConfigSettings.OnlySsl}" />
+                                        <DockPanel>
+                                            <TextBlock Text="Max Uses Per Proxy (0 = infinite)" DockPanel.Dock="Left" MinWidth="220" VerticalAlignment="Center" />
+                                            <NumericUpDown Value="{Binding ConfigSettings.MaxProxyUses, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="0" Maximum="100000" Width="120" HorizontalAlignment="Left" />
+                                        </DockPanel>
+                                        <CheckBox Content="Ban Proxy after Good Status" IsChecked="{Binding ConfigSettings.BanProxyAfterGoodStatus}" />
+                                        <DockPanel>
+                                            <TextBlock Text="Ban Loop Evasion (-1 = default)" DockPanel.Dock="Left" MinWidth="220" VerticalAlignment="Center" />
+                                            <NumericUpDown Value="{Binding ConfigSettings.BanLoopEvasionOverride, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" Minimum="-1" Maximum="1000" Width="120" HorizontalAlignment="Left" />
+                                        </DockPanel>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!-- ═══ INPUT ═══ -->
+                        <Grid Grid.Row="1" IsVisible="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=3}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="8,4">
+                                <Button Content="Add Input" Click="OoAddInput_Click" />
+                                <Button Content="Clear Inputs" Click="OoClearInputs_Click" />
+                            </StackPanel>
+                            <ScrollViewer Grid.Row="1">
+                                <ItemsControl ItemsSource="{Binding ConfigSettings.CustomInputs}" HorizontalAlignment="Left">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Classes="Card" Padding="8" Margin="8,4" MaxWidth="560">
+                                                <Grid ColumnDefinitions="*,Auto">
+                                                    <StackPanel Spacing="4">
+                                                        <DockPanel>
+                                                            <TextBlock Text="Description:" DockPanel.Dock="Left" MinWidth="110" VerticalAlignment="Center" />
+                                                            <TextBox Text="{Binding Description}" />
+                                                        </DockPanel>
+                                                        <DockPanel>
+                                                            <TextBlock Text="Variable Name:" DockPanel.Dock="Left" MinWidth="110" VerticalAlignment="Center" />
+                                                            <TextBox Text="{Binding VariableName}" />
+                                                        </DockPanel>
+                                                    </StackPanel>
+                                                    <Button Grid.Column="1" Content="Remove" VerticalAlignment="Center"
+                                                            Margin="8,0,0,0" Click="OoRemoveInput_Click" Tag="{Binding Id}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+
+                        <!-- ═══ DATA ═══ -->
+                        <Grid Grid.Row="1" IsVisible="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=4}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Margin="12,8" Spacing="6" MaxWidth="520" HorizontalAlignment="Left">
+                                <TextBlock Text="Allowed Wordlist Types" FontWeight="SemiBold" Classes="Secondary" />
+                                <DockPanel>
+                                    <TextBlock Text="Type 1" DockPanel.Dock="Left" MinWidth="60" VerticalAlignment="Center" />
+                                    <ComboBox Tag="1" HorizontalAlignment="Stretch" Loaded="OoWlType_Loaded" SelectionChanged="OoWlType_SelectionChanged" />
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock Text="Type 2" DockPanel.Dock="Left" MinWidth="60" VerticalAlignment="Center" />
+                                    <ComboBox Tag="2" HorizontalAlignment="Stretch" Loaded="OoWlType_Loaded" SelectionChanged="OoWlType_SelectionChanged" />
+                                </DockPanel>
+                                <CheckBox Content="URLencode Data after Slicing" IsChecked="{Binding ConfigSettings.EncodeData}" />
+                                <TextBlock Text="Rules:" FontWeight="SemiBold" Classes="Secondary" Margin="0,6,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="8,4">
+                                <Button Content="Add Rule" Click="OoAddRule_Click" />
+                                <Button Content="Clear Rules" Click="OoClearRules_Click" />
+                            </StackPanel>
+                            <ScrollViewer Grid.Row="2">
+                                <ItemsControl ItemsSource="{Binding ConfigSettings.DataRules}" HorizontalAlignment="Left">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Classes="Card" Padding="8" Margin="8,4" MaxWidth="560">
+                                                <Grid ColumnDefinitions="*,Auto">
+                                                    <StackPanel Spacing="4">
+                                                        <DockPanel>
+                                                            <TextBlock Text="Slice Name:" DockPanel.Dock="Left" MinWidth="110" VerticalAlignment="Center" />
+                                                            <TextBox Text="{Binding SliceName}" />
+                                                        </DockPanel>
+                                                        <DockPanel>
+                                                            <TextBlock Text="Rule:" DockPanel.Dock="Left" MinWidth="110" VerticalAlignment="Center" />
+                                                            <TextBox Text="{Binding RuleString}" />
+                                                        </DockPanel>
+                                                    </StackPanel>
+                                                    <Button Grid.Column="1" Content="Remove" VerticalAlignment="Center"
+                                                            Margin="8,0,0,0" Click="OoRemoveRule_Click" Tag="{Binding Id}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+
+                        <!-- ═══ SELENIUM ═══ -->
+                        <ScrollViewer Grid.Row="1" IsVisible="{Binding OoTab, Converter={StaticResource EqualConverter}, ConverterParameter=5}">
+                            <StackPanel Margin="12" Spacing="10" MaxWidth="560" HorizontalAlignment="Left">
+                                <Border Classes="Card" Padding="12,10">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="BROWSER LIFECYCLE" Classes="SectionHeader" />
+                                        <CheckBox Content="Always Open browser at the start" IsChecked="{Binding ConfigSettings.AlwaysOpen}" />
+                                        <CheckBox Content="Always Quit browser at the end" IsChecked="{Binding ConfigSettings.AlwaysQuit}" />
+                                        <CheckBox Content="Quit browser only on BAN or RETRY" IsChecked="{Binding ConfigSettings.QuitOnBanRetry}" />
+                                    </StackPanel>
+                                </Border>
+                                <Border Classes="Card" Padding="12,10">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="COMMAND LINE &amp; USER AGENT" Classes="SectionHeader" />
+                                        <CheckBox Content="Force Headless" IsChecked="{Binding ConfigSettings.ForceHeadless}" />
+                                        <CheckBox Content="Disable Notifications" IsChecked="{Binding ConfigSettings.DisableNotifications}" />
+                                        <DockPanel>
+                                            <TextBlock Text="Custom (e.g. --headless --incognito):" DockPanel.Dock="Left" MinWidth="240" VerticalAlignment="Center" />
+                                            <TextBox Text="{Binding ConfigSettings.CustomCMDArgs}" />
+                                        </DockPanel>
+                                        <DockPanel>
+                                            <TextBlock Text="Custom User Agent:" DockPanel.Dock="Left" MinWidth="240" VerticalAlignment="Center" />
+                                            <TextBox Text="{Binding ConfigSettings.CustomUserAgent}" />
+                                        </DockPanel>
+                                        <CheckBox Content="Use Random User Agent" IsChecked="{Binding ConfigSettings.RandomUA}" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </DataTemplate>
+            </ContentControl.DataTemplates>
+        </ContentControl>
+    </Grid>
+</UserControl>

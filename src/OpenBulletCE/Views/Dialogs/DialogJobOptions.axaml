@@ -1,0 +1,86 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:rl="clr-namespace:RuriLib.ViewModels;assembly=RuriLib"
+        xmlns:ob="clr-namespace:OpenBulletCE" mc:Ignorable="d"
+        x:Class="OpenBulletCE.Views.Dialogs.DialogJobOptions"
+        Title="Edit Job Options" Width="560" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="{StaticResource BrushBackground}">
+
+    <Grid Margin="14" RowDefinitions="Auto,Auto">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*,10,*">
+
+            <!-- ─── GENERAL ─── -->
+            <Border Grid.Column="0" Classes="Card" Padding="10">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="GENERAL" Classes="Heading2" />
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" VerticalAlignment="Center">
+                        <TextBlock Text="Max hits (0 = no limit):" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Column="1" Minimum="0" Maximum="100000"
+                                       Value="{Binding Settings.General.MaxHits, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" />
+                        <TextBlock Grid.Row="1" Text="Bot wait (ms):" VerticalAlignment="Center" Margin="0,6,0,0" />
+                        <NumericUpDown Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="60000" Margin="0,6,0,0"
+                                       Value="{Binding Settings.General.WaitTime, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" />
+                    </Grid>
+                    <CheckBox Content="Send to check on abort"
+                              IsChecked="{Binding Settings.General.SendToCheckOnAbort}" />
+                    <CheckBox Content="Enable bot log" IsChecked="{Binding Settings.General.EnableBotLog}" />
+                    <CheckBox Content="Save last source" IsChecked="{Binding Settings.General.SaveLastSource}" />
+
+                    <TextBlock Text="WEBHOOK" Classes="Heading2" Margin="0,6,0,0" />
+                    <CheckBox Content="Enabled" IsChecked="{Binding Settings.General.WebhookEnabled}" />
+                    <TextBox Watermark="Webhook URL" Text="{Binding Settings.General.WebhookURL}" />
+                    <TextBox Watermark="Webhook user" Text="{Binding Settings.General.WebhookUser}" />
+                </StackPanel>
+            </Border>
+
+            <!-- ─── PROXIES ─── -->
+            <Border Grid.Column="2" Classes="Card" Padding="10">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="PROXIES" Classes="Heading2" />
+                    <CheckBox Content="Concurrent use" IsChecked="{Binding Settings.Proxies.ConcurrentUse}" />
+                    <CheckBox Content="Never ban" IsChecked="{Binding Settings.Proxies.NeverBan}" />
+                    <CheckBox Content="Shuffle on start" IsChecked="{Binding Settings.Proxies.ShuffleOnStart}" />
+                    <CheckBox Content="Reload when all banned" IsChecked="{Binding Settings.Proxies.Reload}" />
+
+                    <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+                        <TextBlock Text="Ban loop evasion:" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Column="1" Minimum="0" Maximum="10000"
+                                       Value="{Binding Settings.Proxies.BanLoopEvasion, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+                        <TextBlock Text="Reload interval (min):" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Column="1" Minimum="0" Maximum="1440"
+                                       Value="{Binding Settings.Proxies.ReloadInterval, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" />
+                    </Grid>
+
+                    <TextBlock Text="Reload source:" />
+                    <ComboBox SelectedItem="{Binding Settings.Proxies.ReloadSource}">
+                        <rl:ProxyReloadSource>Manager</rl:ProxyReloadSource>
+                        <rl:ProxyReloadSource>File</rl:ProxyReloadSource>
+                        <rl:ProxyReloadSource>Remote</rl:ProxyReloadSource>
+                    </ComboBox>
+                    <TextBox Watermark="Reload path (file/remote)"
+                             Text="{Binding Settings.Proxies.ReloadPath}" />
+
+                    <TextBlock Text="DELAYED START" Classes="Heading2" Margin="0,6,0,0" />
+                    <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+                        <TextBlock Text="Start after (min):" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Column="1" Minimum="0" Maximum="1440"
+                                       Value="{Binding DelayedStartMinutes, UpdateSourceTrigger=LostFocus, Converter={x:Static ob:IntDecimalConverter.Instance}}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8"
+                    HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Classes="Accent" Content="OK" MinWidth="80" Click="Accept_Click" />
+            <Button Content="Cancel" MinWidth="80" Click="Cancel_Click" />
+        </StackPanel>
+    </Grid>
+</Window>
